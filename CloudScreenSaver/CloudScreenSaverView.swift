@@ -14,6 +14,7 @@ class CloudScreenSaverView: ScreenSaverView {
     override init?(frame: NSRect, isPreview: Bool) {
         super.init(frame: frame, isPreview: isPreview)
         self.animationTimeInterval = Self.secondPerFrame
+        Cache.setupMock()
         configure()
     }
     
@@ -25,48 +26,44 @@ class CloudScreenSaverView: ScreenSaverView {
     
     // MARK: Constant
     static let secondPerFrame = 1.0 / 30.0
-    static let backgroundColor = NSColor(red: 0.00, green: 0.01, blue: 0.00, alpha:1.0)
+    static let backgroundColor = CGColor(red: 0.00, green: 0.01, blue: 0.00, alpha: 1.0)
     
-    // MARK: Outlets
-    private let videoLayer = AVPlayerLayer()
+    // MARK: Video Player
+    var videoPlayer: VideoPlayer?
     
-    // MARK: - Configuration
     func configure() {
-        // define layer
-        wantsLayer = true
-        defineVideoLayer()
-        layer = videoLayer
-        
-        // setup layer
-        videoLayer.player = LoopPlayer(
-            items: [
+        // create video player
+        videoPlayer = VideoPlayer(
+            videos: [
                 Video(name: "auroraBorealis", ext: .mp4),
                 Video(name: "bits", ext: .mp4)
             ],
-            numberOfLoops: 2,
             shouldRandomize: true
         )
+        
+        // add layer
+        self.wantsLayer = true
+        configureVideoLayer(videoPlayer!.layer)
+        self.layer = videoPlayer?.layer
     }
     
-    
-    func defineVideoLayer() {
+    func configureVideoLayer(_ videoLayer: AVPlayerLayer) {
         videoLayer.frame = bounds
         videoLayer.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
         videoLayer.needsDisplayOnBoundsChange = true
         videoLayer.contentsGravity = .resizeAspect
-        videoLayer.backgroundColor = Self.backgroundColor.cgColor
+        videoLayer.backgroundColor = Self.backgroundColor
     }
-
     
     // MARK: Lifecycle
     override func startAnimation() {
         super.startAnimation()
-        videoLayer.player?.play()
+        videoPlayer?.play()
     }
     
     override func stopAnimation() {
         super.stopAnimation()
-        videoLayer.player?.pause()
+        videoPlayer?.pause()
     }
     
     // MARK: Preferences
@@ -86,7 +83,8 @@ struct Video {
     var ext: Extension
 }
 
-protocol CloudAccess {
-    
+enum Extension: String {
+    case mp4
+    case mov
 }
 
