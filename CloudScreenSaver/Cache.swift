@@ -44,6 +44,13 @@ struct Cache {
     static func setupMock() {
         storeVideoFromBundle("auroraBorealis")
         storeVideoFromBundle("bits")
+        
+        guard let bucket = S3Client(bucketName: "cloud-screen-saver") else {
+            fatalError("invalid bucket")
+        }
+        bucket.listFiles { result in
+            print(result)
+        }
     }
     
     static func storeVideoFromBundle(_ name: String) {
