@@ -8,21 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		0C41C917257B59EE00106986 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7EE4AD257AFD8A00E639D0 /* Cache.swift */; };
-		0C41C91A257B5A0E00106986 /* bits.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0C7EE4A7257AFD1800E639D0 /* bits.mp4 */; };
 		0C78C48A250F90BE00C312EB /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78C489250F90BE00C312EB /* VideoPlayer.swift */; };
 		0C78C492250F93A900C312EB /* TesterAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78C491250F93A900C312EB /* TesterAppApp.swift */; };
 		0C78C494250F93A900C312EB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78C493250F93A900C312EB /* ContentView.swift */; };
 		0C78C496250F93AB00C312EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C78C495250F93AB00C312EB /* Assets.xcassets */; };
 		0C78C499250F93AB00C312EB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C78C498250F93AB00C312EB /* Preview Assets.xcassets */; };
-		0C78C4A6250F967C00C312EB /* auroraBorealis.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0CEFC005250D539B00776882 /* auroraBorealis.mp4 */; };
 		0C78C4A7250F968000C312EB /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78C489250F90BE00C312EB /* VideoPlayer.swift */; };
 		0C78C4A8250F968000C312EB /* CloudScreenSaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEFBFFC250D524700776882 /* CloudScreenSaverView.swift */; };
 		0C7E3DB5257D66EC005F707A /* S3Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7E3DB4257D66EC005F707A /* S3Client.swift */; };
 		0C7E3DB6257D66EC005F707A /* S3Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7E3DB4257D66EC005F707A /* S3Client.swift */; };
-		0C7EE4A8257AFD1800E639D0 /* bits.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0C7EE4A7257AFD1800E639D0 /* bits.mp4 */; };
 		0C7EE4AE257AFD8A00E639D0 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7EE4AD257AFD8A00E639D0 /* Cache.swift */; };
 		0CEFBFFD250D524700776882 /* CloudScreenSaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEFBFFC250D524700776882 /* CloudScreenSaverView.swift */; };
-		0CEFC006250D539B00776882 /* auroraBorealis.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 0CEFC005250D539B00776882 /* auroraBorealis.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,12 +31,10 @@
 		0C78C49A250F93AB00C312EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0C78C49B250F93AB00C312EB /* TesterApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TesterApp.entitlements; sourceTree = "<group>"; };
 		0C7E3DB4257D66EC005F707A /* S3Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3Client.swift; sourceTree = "<group>"; };
-		0C7EE4A7257AFD1800E639D0 /* bits.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = bits.mp4; sourceTree = "<group>"; };
 		0C7EE4AD257AFD8A00E639D0 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		0CEFBFF7250D524700776882 /* CloudScreenSaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CloudScreenSaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CEFBFFC250D524700776882 /* CloudScreenSaverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudScreenSaverView.swift; sourceTree = "<group>"; };
 		0CEFBFFE250D524700776882 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0CEFC005250D539B00776882 /* auroraBorealis.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = auroraBorealis.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,19 +109,9 @@
 				0C78C489250F90BE00C312EB /* VideoPlayer.swift */,
 				0C7EE4AD257AFD8A00E639D0 /* Cache.swift */,
 				0C7E3DB4257D66EC005F707A /* S3Client.swift */,
-				0CEFC004250D539100776882 /* test */,
 				0CEFBFFE250D524700776882 /* Info.plist */,
 			);
 			path = CloudScreenSaver;
-			sourceTree = "<group>";
-		};
-		0CEFC004250D539100776882 /* test */ = {
-			isa = PBXGroup;
-			children = (
-				0C7EE4A7257AFD1800E639D0 /* bits.mp4 */,
-				0CEFC005250D539B00776882 /* auroraBorealis.mp4 */,
-			);
-			path = test;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -220,9 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C78C499250F93AB00C312EB /* Preview Assets.xcassets in Resources */,
-				0C41C91A257B5A0E00106986 /* bits.mp4 in Resources */,
 				0C78C496250F93AB00C312EB /* Assets.xcassets in Resources */,
-				0C78C4A6250F967C00C312EB /* auroraBorealis.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,8 +212,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0CEFC006250D539B00776882 /* auroraBorealis.mp4 in Resources */,
-				0C7EE4A8257AFD1800E639D0 /* bits.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

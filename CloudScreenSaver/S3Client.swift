@@ -17,6 +17,22 @@ struct S3Client {
         bucketUrl = url
     }
     
+    func downloadFile(_ file: S3File) {
+        let url = bucketUrl.appendingPathComponent(file.name)
+        let downloadTask = URLSession.shared.downloadTask(with: url) {
+            urlOrNil, responseOrNil, errorOrNil in
+            // check for and handle errors:
+            // * errorOrNil should be nil
+            // * responseOrNil should be an HTTPURLResponse with statusCode in 200..<299
+            
+            guard let fileURL = urlOrNil else { return }
+            Cache.saveFile(currentUrl: fileURL, file: file)
+            print(fileURL)
+
+        }
+        downloadTask.resume()
+    }
+    
     func listFiles(completion: @escaping (Result<Set<S3File>, Error>) -> ()) {
         // get session
         let session = URLSession.shared
@@ -93,7 +109,7 @@ struct S3Client {
     }
 }
 
-struct S3File {
+struct S3File: Codable {
     let name: String
     let etag: String
 }

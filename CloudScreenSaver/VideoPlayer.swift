@@ -13,14 +13,13 @@ final class VideoPlayer {
     let queue: AVQueuePlayer
     
     // MARK: Lifecycle
-    init(videos: [Video], shouldRandomize: Bool) {
+    init() {
         // Get each video from the cache
-        let items = (shouldRandomize ? videos.shuffled() : videos)
-            .reduce(into: [AVPlayerItem]()) { (players, video) in
-                guard let asset = Cache.getVideo(video) else { return }
-                let player = AVPlayerItem(asset: asset)
-                players.append(player)
-            }
+        let items = Cache.getIndex().reduce(into: [AVPlayerItem]()) { (players, file) in
+            guard let asset = Cache.getFile(file) else { return }
+            let player = AVPlayerItem(asset: asset)
+            players.append(player)
+        }
         
         // Make player
         self.queue = AVQueuePlayer(items: items)
@@ -44,6 +43,7 @@ final class VideoPlayer {
     
     // MARK: - Observers
     func observe() {
+        // loop the video
         NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
             object: nil,
@@ -51,6 +51,18 @@ final class VideoPlayer {
         ) { _ in
             guard let currentItem = self.queue.currentItem?.copy() as? AVPlayerItem else { return }
             self.queue.insert(currentItem, after: self.queue.items().last)
+        }
+        
+        // add downloaded files to queue
+        NotificationCenter.default.addObserver(
+            forName: .NewVideoDownloaded,
+            object: nil,
+            queue: nil
+        ) { notification in
+            let file = notification.object as! S3File
+            guard let asset = Cache.getFile(file) else { return }
+            let player = AVPlayerItem(asset: asset)
+            self.queue.insert(player, after: self.queue.items().last)
         }
     }
     
@@ -60,6 +72,15 @@ final class VideoPlayer {
             name: .AVPlayerItemDidPlayToEndTime,
             object: nil
         )
+        
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .NewVideoDownloaded,
+            object: nil
+        )
     }
 }
 
+extension NSNotification.Name {
+    static let NewVideoDownloaded: Self = NSNotification.Name(rawValue: "NewVideoDownloaded")
+}

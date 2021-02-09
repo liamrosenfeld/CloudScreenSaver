@@ -14,7 +14,7 @@ class CloudScreenSaverView: ScreenSaverView {
     override init?(frame: NSRect, isPreview: Bool) {
         super.init(frame: frame, isPreview: isPreview)
         self.animationTimeInterval = Self.secondPerFrame
-        Cache.setupMock()
+        Cache.pullFiles()
         configure()
     }
     
@@ -33,13 +33,7 @@ class CloudScreenSaverView: ScreenSaverView {
     
     func configure() {
         // create video player
-        videoPlayer = VideoPlayer(
-            videos: [
-                Video(name: "auroraBorealis", ext: .mp4),
-                Video(name: "bits", ext: .mp4)
-            ],
-            shouldRandomize: true
-        )
+        videoPlayer = VideoPlayer()
         
         // add layer
         self.wantsLayer = true
@@ -77,14 +71,3 @@ class CloudScreenSaverView: ScreenSaverView {
 //        return preferences.window
     }
 }
-
-struct Video {
-    var name: String
-    var ext: Extension
-}
-
-enum Extension: String {
-    case mp4
-    case mov
-}
-

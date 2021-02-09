@@ -16,8 +16,8 @@ In `.../Application Support/CloudScreenSaver/Cache/`
  - Lower: `~/Library/Application Support/CloudScreenSaver/`
  */
 
-struct Cache {
-    // MARK: - Interactions
+enum Cache {
+    // MARK: - Actions
     static func clearCache() {
         do {
             let directoryContent = try FileManager.default.contentsOfDirectory(at: cachePath, includingPropertiesForKeys: nil)
@@ -31,43 +31,86 @@ struct Cache {
         }
     }
     
-    static func getVideo(_ video: Video) -> AVAsset? {
-        let url = cachePath.appendingPathComponent("\(video.name).\(video.ext.rawValue)")
-        if !FileManager.default.fileExists(atPath: url.path) {
-            print("\(video.name) not found")
-            return nil
+    static func saveFile(currentUrl: URL, file: S3File) {
+        // save file
+        let savedURL = cachePath.appendingPathComponent(file.name)
+        do {
+            try FileManager.default.moveItem(at: currentUrl, to: savedURL)
+        } catch {
+            print ("file error: \(error)")
         }
-        return AVAsset(url: url)
+        
+        // update index
+        var files = getIndex()
+        files.update(with: file)
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(files)
+        FileManager.default.createFile(atPath: cacheIndex.path, contents: data, attributes: nil)
+        
+        // notify video display
+        let notification = Notification(name: .NewVideoDownloaded, object: file, userInfo: nil)
+        NotificationCenter.default.post(notification)
     }
     
-    // MARK: - Testing
-    static func setupMock() {
-        storeVideoFromBundle("auroraBorealis")
-        storeVideoFromBundle("bits")
+    static func removeFile(file: S3File) {
+        // save file
+        let savedURL = cachePath.appendingPathComponent(file.name)
+        do {
+            try FileManager.default.removeItem(at: savedURL)
+        } catch {
+            print ("file error: \(error)")
+        }
+        
+        // update index
+        var files = getIndex()
+        files.remove(file)
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(files)
+        FileManager.default.createFile(atPath: cacheIndex.path, contents: data, attributes: nil)
+    }
+    
+    static func pullFiles() {
+//        clearCache()
         
         guard let bucket = S3Client(bucketName: "cloud-screen-saver") else {
             fatalError("invalid bucket")
         }
         bucket.listFiles { result in
-            print(result)
+            switch result {
+            case .success(let files):
+                let existingFiles = getIndex()
+                let diff = files.diff(old: existingFiles)
+                diff.added.forEach { file in
+                    bucket.downloadFile(file)
+                }
+                diff.removed.forEach { file in
+                    removeFile(file: file)
+                }
+            case .failure(let error):
+                print(error)
+            }
         }
     }
     
-    static func storeVideoFromBundle(_ name: String) {
-        let bundle = Bundle.main.url(forResource: name, withExtension: "mp4")!
-        let dest = cachePath.appendingPathComponent("\(name).mp4")
-        if FileManager.default.fileExists(atPath: dest.path) {
-            print("\(name) already exists")
-            return
+    // MARK: - Retrieving
+    static func getFile(_ file: S3File) -> AVAsset? {
+        let url = cachePath.appendingPathComponent(file.name)
+        if !FileManager.default.fileExists(atPath: url.path) {
+            print("\(file.name) not found")
+            return nil
         }
-        try! FileManager.default.copyItem(
-            at: bundle,
-            to: dest
-        )
+        return AVAsset(url: url)
+    }
+    
+    static func getIndex() -> Set<S3File> {
+        let existingFilesData = try! Data(contentsOf: cacheIndex)
+        let decoder = JSONDecoder()
+        let files = (try? decoder.decode(Set<S3File>.self, from: existingFilesData)) ?? Set<S3File>()
+        return files
     }
     
     // MARK: - Directories
-    private static var supportPath: URL {
+    private static var supportPath: URL = {
         // Grab an array of Application Support paths
         let appSupportPaths = NSSearchPathForDirectoriesInDomains(
             .applicationSupportDirectory,
@@ -84,40 +127,59 @@ struct Cache {
         let cssFolder = appSupportDirectory.appendingPathComponent("CloudScreenSaver")
         let cssFolderExists = FileManager.default.fileExists(atPath: cssFolder.path)
         
-        if cssFolderExists {
-            return cssFolder
-        } else {
+        if !cssFolderExists {
             print("Creating app support directory...")
-            
             do {
                 try FileManager.default.createDirectory(
                     at: cssFolder,
                     withIntermediateDirectories: false,
                     attributes: nil
                 )
-                return cssFolder
             } catch let error {
                 fatalError("FATAL : Couldn't create app support directory in User directory: \(error)")
             }
         }
-    }
+        
+        return cssFolder
+    }()
     
     private static var cachePath: URL = {
         let cache = Cache.supportPath.appendingPathComponent("Cache")
         
-        if FileManager.default.fileExists(atPath: cache.path) {
-            return cache
-        } else {
+        if !FileManager.default.fileExists(atPath: cache.path) {
+            print("Creating cache directory...")
             do {
                 try FileManager.default.createDirectory(
                     at: cache,
                     withIntermediateDirectories: false,
                     attributes: nil
                 )
-                return cache
             } catch let error {
                 fatalError("FATAL : Couldn't create Cache directory in CloudScreenSaver's AppSupport directory: \(error)")
             }
         }
+        
+        return cache
     }()
+    
+    private static var cacheIndex: URL = {
+        let cache = Cache.supportPath.appendingPathComponent("cache-index.json")
+        
+        if !FileManager.default.fileExists(atPath: cache.path) {
+            print("Creating cache index...")
+            FileManager.default.createFile(atPath: cache.path, contents: nil, attributes: nil)
+        }
+        
+        return cache
+    }()
+}
+
+
+extension Set where Element: Equatable {
+    func diff(old: Self) -> (added: Self, removed: Self) {
+        let difference = self.symmetricDifference(old)
+        let added = difference.intersection(self)
+        let removed = difference.intersection(old)
+        return (added, removed)
+    }
 }
