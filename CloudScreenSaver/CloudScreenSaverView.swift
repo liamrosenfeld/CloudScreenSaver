@@ -7,6 +7,7 @@
 
 import ScreenSaver
 import AVFoundation
+import SwiftUI
 
 class CloudScreenSaverView: ScreenSaverView {
     
@@ -14,13 +15,14 @@ class CloudScreenSaverView: ScreenSaverView {
     override init?(frame: NSRect, isPreview: Bool) {
         super.init(frame: frame, isPreview: isPreview)
         self.animationTimeInterval = Self.secondPerFrame
-        Cache.pullFiles()
+        Cache.updateFromCloud()
         configure()
     }
     
     required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
         animationTimeInterval = Self.secondPerFrame
+        Cache.updateFromCloud()
         configure()
     }
     
@@ -61,13 +63,23 @@ class CloudScreenSaverView: ScreenSaverView {
     }
     
     // MARK: Preferences
+    lazy var preferencesWindow: NSWindow = {
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 450, height: 350),
+            styleMask: [.titled, .fullSizeContentView, .utilityWindow],
+            backing: .buffered, defer: false)
+        window.center()
+        window.setFrameAutosaveName("Main Window")
+        let view = NSHostingView(rootView: PreferencesView(window: window))
+        window.contentView = view
+        return window
+    }()
+    
     override var hasConfigureSheet: Bool {
-        return false
-//        return true
+        return true
     }
     
     override var configureSheet: NSWindow? {
-        return nil
-//        return preferences.window
+        return preferencesWindow
     }
 }

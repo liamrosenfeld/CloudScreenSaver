@@ -7,7 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0C049B8325D35519002FE3D8 /* Paths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C049B8225D35519002FE3D8 /* Paths.swift */; };
+		0C049B8A25D3573E002FE3D8 /* Paths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C049B8225D35519002FE3D8 /* Paths.swift */; };
+		0C049B8F25D35B61002FE3D8 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C049B8E25D35B61002FE3D8 /* PreferencesView.swift */; };
+		0C049B9425D35B96002FE3D8 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C049B8E25D35B61002FE3D8 /* PreferencesView.swift */; };
 		0C41C917257B59EE00106986 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7EE4AD257AFD8A00E639D0 /* Cache.swift */; };
+		0C503EA725D2202C004C0715 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C503EA625D2202C004C0715 /* Preferences.swift */; };
+		0C503EAC25D220E1004C0715 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C503EA625D2202C004C0715 /* Preferences.swift */; };
 		0C78C48A250F90BE00C312EB /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78C489250F90BE00C312EB /* VideoPlayer.swift */; };
 		0C78C492250F93A900C312EB /* TesterAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78C491250F93A900C312EB /* TesterAppApp.swift */; };
 		0C78C494250F93A900C312EB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78C493250F93A900C312EB /* ContentView.swift */; };
@@ -22,6 +28,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0C049B8225D35519002FE3D8 /* Paths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paths.swift; sourceTree = "<group>"; };
+		0C049B8E25D35B61002FE3D8 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
+		0C503EA625D2202C004C0715 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		0C78C489250F90BE00C312EB /* VideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayer.swift; sourceTree = "<group>"; };
 		0C78C48F250F93A900C312EB /* TesterApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TesterApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C78C491250F93A900C312EB /* TesterAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TesterAppApp.swift; sourceTree = "<group>"; };
@@ -55,6 +64,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C049B8D25D35B3A002FE3D8 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				0C503EA625D2202C004C0715 /* Preferences.swift */,
+				0C049B8E25D35B61002FE3D8 /* PreferencesView.swift */,
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
 		0C78C490250F93A900C312EB /* TesterApp */ = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +101,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		0CC9286825D4C39E005E445D /* Cache */ = {
+			isa = PBXGroup;
+			children = (
+				0C7EE4AD257AFD8A00E639D0 /* Cache.swift */,
+				0C7E3DB4257D66EC005F707A /* S3Client.swift */,
+			);
+			path = Cache;
+			sourceTree = "<group>";
+		};
 		0CEFBFED250D524700776882 = {
 			isa = PBXGroup;
 			children = (
@@ -107,8 +134,9 @@
 			children = (
 				0CEFBFFC250D524700776882 /* CloudScreenSaverView.swift */,
 				0C78C489250F90BE00C312EB /* VideoPlayer.swift */,
-				0C7EE4AD257AFD8A00E639D0 /* Cache.swift */,
-				0C7E3DB4257D66EC005F707A /* S3Client.swift */,
+				0C049B8225D35519002FE3D8 /* Paths.swift */,
+				0CC9286825D4C39E005E445D /* Cache */,
+				0C049B8D25D35B3A002FE3D8 /* Preferences */,
 				0CEFBFFE250D524700776882 /* Info.plist */,
 			);
 			path = CloudScreenSaver;
@@ -168,7 +196,7 @@
 		0CEFBFEE250D524700776882 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1200;
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1220;
 				TargetAttributes = {
 					0C78C48E250F93A900C312EB = {
@@ -223,10 +251,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C78C4A8250F968000C312EB /* CloudScreenSaverView.swift in Sources */,
+				0C503EAC25D220E1004C0715 /* Preferences.swift in Sources */,
 				0C7E3DB6257D66EC005F707A /* S3Client.swift in Sources */,
 				0C41C917257B59EE00106986 /* Cache.swift in Sources */,
+				0C049B9425D35B96002FE3D8 /* PreferencesView.swift in Sources */,
 				0C78C494250F93A900C312EB /* ContentView.swift in Sources */,
 				0C78C492250F93A900C312EB /* TesterAppApp.swift in Sources */,
+				0C049B8A25D3573E002FE3D8 /* Paths.swift in Sources */,
 				0C78C4A7250F968000C312EB /* VideoPlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,8 +268,11 @@
 			files = (
 				0C78C48A250F90BE00C312EB /* VideoPlayer.swift in Sources */,
 				0C7EE4AE257AFD8A00E639D0 /* Cache.swift in Sources */,
+				0C503EA725D2202C004C0715 /* Preferences.swift in Sources */,
+				0C049B8325D35519002FE3D8 /* Paths.swift in Sources */,
 				0CEFBFFD250D524700776882 /* CloudScreenSaverView.swift in Sources */,
 				0C7E3DB5257D66EC005F707A /* S3Client.swift in Sources */,
+				0C049B8F25D35B61002FE3D8 /* PreferencesView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

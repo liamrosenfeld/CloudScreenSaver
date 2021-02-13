@@ -13,5 +13,9 @@ struct TesterAppApp: App {
         WindowGroup {
             ContentView()
         }
+        Settings {
+            PreferencesView()
+                .frame(width: 450, height: 350)
+        }
     }
 }
