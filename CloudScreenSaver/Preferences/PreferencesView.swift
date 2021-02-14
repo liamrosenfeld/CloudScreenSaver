@@ -28,6 +28,22 @@ struct PreferencesView: View {
                     Text(".s3.amazonaws.com")
                 }
                 
+                Text("Update Frequency")
+                Picker("Update Frequency", selection: $preferences.updateFrequency) {
+                    Text("Every Time")
+                        .tag(0.0)
+                    Text("Hourly")
+                        .tag(3600.0)
+                    Text("Twice Daily")
+                        .tag(43200.0)
+                    Text("Daily")
+                        .tag(86400.0)
+                    Text("Twice Weekly")
+                        .tag(302400.0)
+                    Text("Weekly")
+                        .tag(604800.0)
+                }
+                
                 Button("Apply", action: preferences.saveToFile)
             }
             

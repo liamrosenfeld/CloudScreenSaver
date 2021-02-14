@@ -9,8 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        GeometryReader { reader in
-            ScreenSaver(frame: NSRect(origin: .zero, size: reader.size))
+        ZStack(alignment: .bottom) {
+            GeometryReader { reader in
+                ScreenSaver(frame: NSRect(origin: .zero, size: reader.size))
+            }
+            Button("Update if time", action: Cache.updateIfTime)
         }
     }
 }

@@ -35,6 +35,10 @@ enum Paths {
         return rootFile(named: "cache-index.json")
     }()
     
+    static var lastUpdateFile: URL = {
+        return rootFile(named: "last-update.txt")
+    }()
+    
     static private func rootFile(named name: String) -> URL {
         let url = supportPath.appendingPathComponent(name)
         

@@ -14,7 +14,7 @@ struct TesterAppApp: App {
             ContentView()
         }
         Settings {
-            PreferencesView()
+            PreferencesView(window: NSWindow())
                 .frame(width: 450, height: 350)
         }
     }

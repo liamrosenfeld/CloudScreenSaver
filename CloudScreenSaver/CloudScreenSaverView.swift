@@ -15,14 +15,14 @@ class CloudScreenSaverView: ScreenSaverView {
     override init?(frame: NSRect, isPreview: Bool) {
         super.init(frame: frame, isPreview: isPreview)
         self.animationTimeInterval = Self.secondPerFrame
-        Cache.updateFromCloud()
+        Cache.updateIfTime()
         configure()
     }
     
     required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
         animationTimeInterval = Self.secondPerFrame
-        Cache.updateFromCloud()
+        Cache.updateIfTime()
         configure()
     }
     

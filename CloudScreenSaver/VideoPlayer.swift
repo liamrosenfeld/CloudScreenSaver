@@ -16,7 +16,7 @@ final class VideoPlayer {
     init() {
         // Get each video from the cache
         let items = Cache.getIndex().reduce(into: [AVPlayerItem]()) { (players, file) in
-            guard let asset = Cache.getFile(file) else { return }
+            guard let asset = Cache.getVideo(file) else { return }
             let player = AVPlayerItem(asset: asset)
             players.append(player)
         }
@@ -60,7 +60,7 @@ final class VideoPlayer {
             queue: nil
         ) { notification in
             let file = notification.object as! S3File
-            guard let asset = Cache.getFile(file) else { return }
+            guard let asset = Cache.getVideo(file) else { return }
             let player = AVPlayerItem(asset: asset)
             self.queue.insert(player, after: self.queue.items().last)
         }

@@ -33,6 +33,47 @@ enum Cache {
         }
     }
     
+    static func updateIfTime() {
+        let lastFetch   = getLastUpdate()
+        let timeBetween = Preferences.retrieveFromFile().updateFrequency
+        print(timeBetween)
+        let nextFetch   = lastFetch.addingTimeInterval(timeBetween)
+        print(nextFetch)
+        if  nextFetch <= Date() {
+            print("updating")
+            updateFromCloud()
+        }
+    }
+    
+    static func updateFromCloud() {
+        guard let bucket = S3Client(bucketName: "cloud-screen-saver") else {
+            fatalError("invalid bucket")
+        }
+        bucket.listFiles { result in
+            switch result {
+            case .success(let files):
+                // get diff
+                let existingFiles = getIndex()
+                let diff = files.diff(old: existingFiles)
+                
+                // apply diff
+                diff.added.forEach { file in
+                    bucket.downloadFile(file)
+                }
+                diff.removed.forEach { file in
+                    removeFile(file: file)
+                }
+                
+                // record fetch time
+                let date = String(Date().timeIntervalSince1970)
+                try! date.write(to: Paths.lastUpdateFile, atomically: true, encoding: .utf8)
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
+    // MARK: - Add + Remove
     static func saveFile(currentUrl: URL, file: S3File) {
         // save file
         let savedURL = Paths.cacheFolder.appendingPathComponent(file.name)
@@ -71,33 +112,8 @@ enum Cache {
         FileManager.default.createFile(atPath: Paths.cacheIndexFile.path, contents: data, attributes: nil)
     }
     
-    static func updateFromCloud() {
-        guard let bucket = S3Client(bucketName: "cloud-screen-saver") else {
-            fatalError("invalid bucket")
-        }
-        bucket.listFiles { result in
-            switch result {
-            case .success(let files):
-                // get diff
-                let existingFiles = getIndex()
-                let diff = files.diff(old: existingFiles)
-                
-                // apply diff
-                diff.added.forEach { file in
-                    bucket.downloadFile(file)
-                }
-                diff.removed.forEach { file in
-                    removeFile(file: file)
-                }
-                
-            case .failure(let error):
-                print(error)
-            }
-        }
-    }
-    
     // MARK: - Retrieving
-    static func getFile(_ file: S3File) -> AVAsset? {
+    static func getVideo(_ file: S3File) -> AVAsset? {
         let url = Paths.cacheFolder.appendingPathComponent(file.name)
         if !FileManager.default.fileExists(atPath: url.path) {
             print("\(file.name) not found")
@@ -106,14 +122,26 @@ enum Cache {
         return AVAsset(url: url)
     }
     
+    // MARK: - Internal Files
     static func getIndex() -> Set<S3File> {
-        let existingFilesData = try! Data(contentsOf: Paths.cacheIndexFile)
-        let decoder = JSONDecoder()
-        let files = (try? decoder.decode(Set<S3File>.self, from: existingFilesData)) ?? Set<S3File>()
-        return files
+        return Paths.cacheIndexFile.getDecodableFile() ?? Set<S3File>()
+    }
+    
+    static func getLastUpdate() -> Date {
+        let str = (try? String(contentsOf: Paths.lastUpdateFile)) ?? "0"
+        let interval = Double(str) ?? 0
+        return Date.init(timeIntervalSince1970: interval)
     }
 }
 
+extension URL {
+    func getDecodableFile<Dest: Decodable>() -> Dest? {
+        let data = try! Data(contentsOf: self)
+        let decoder = JSONDecoder()
+        let files = (try? decoder.decode(Dest.self, from: data))
+        return files
+    }
+}
 
 extension Set where Element: Equatable {
     func diff(old: Self) -> (added: Self, removed: Self) {
