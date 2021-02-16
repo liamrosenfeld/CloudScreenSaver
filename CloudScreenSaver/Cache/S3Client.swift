@@ -18,14 +18,22 @@ struct S3Client {
     }
     
     func downloadFile(_ file: S3File) {
-        let url = bucketUrl.appendingPathComponent(file.name)
+        let url = bucketUrl.appendingPathComponent(file.cloudName)
         let downloadTask = URLSession.shared.downloadTask(with: url) {
-            urlOrNil, responseOrNil, errorOrNil in
-            // check for and handle errors:
-            // * errorOrNil should be nil
-            // * responseOrNil should be an HTTPURLResponse with statusCode in 200..<299
+            downloadUrl, response, error in
+            // check for and handle errors
+            if let error = error {
+                print("download error \(error)")
+                return
+            }
+            guard let status = (response as? HTTPURLResponse)?.statusCode else { return }
+            guard 200 <= status && status < 299 else {
+                print("download failed with status code: \(status)")
+                return
+            }
             
-            guard let fileURL = urlOrNil else { return }
+            // move file from temp location
+            guard let fileURL = downloadUrl else { return }
             Cache.saveFile(currentUrl: fileURL, file: file)
             print(fileURL)
 
@@ -45,20 +53,23 @@ struct S3Client {
         // Start a new Task
         let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             if let error = error {
-                // Failure
-                print("URL Session Task Failed: \(error)")
+                print("list failed with error: \(error)")
                 completion(.failure(error))
-            } else if let data = data {
-                // Success
-                let statusCode = (response as! HTTPURLResponse).statusCode
-                print("URL Session Task Succeeded: HTTP \(statusCode)")
-                
-                let parser = XMLParser(data: data)
-                let fileParserManager = FileListParser()
-                parser.delegate = fileParserManager
-                parser.parse()
-                completion(.success(fileParserManager.files))
+                return
             }
+            
+            guard let status = (response as? HTTPURLResponse)?.statusCode else { return }
+            guard 200 <= status && status < 299 else {
+                completion(.failure("list failed with status code: \(status)"))
+                return
+            }
+            
+            guard let data = data else { return }
+            let parser = XMLParser(data: data)
+            let fileParserManager = FileListParser()
+            parser.delegate = fileParserManager
+            parser.parse()
+            completion(.success(fileParserManager.files))
         }
         task.resume()
         session.finishTasksAndInvalidate()
@@ -84,7 +95,8 @@ struct S3Client {
         // when </Content> is encountered
         func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
             if elementName == "Contents" {
-                let file = S3File(name: fileName, etag: fileTag)
+                let name: NSString = fileName as NSString
+                let file = S3File(name: name.deletingPathExtension, ext: name.pathExtension, etag: fileTag)
                 files.insert(file)
             }
         }
@@ -111,7 +123,16 @@ struct S3Client {
 
 struct S3File: Codable {
     let name: String
+    let ext: String
     let etag: String
+    
+    var localName: String {
+        return "\(etag).\(ext)"
+    }
+    
+    var cloudName: String {
+        return "\(name).\(ext)"
+    }
 }
 
 extension S3File: Equatable, Hashable {
@@ -140,5 +161,7 @@ extension URL {
     }
 }
 
-
+extension String: LocalizedError {
+    public var errorDescription: String? { return self }
+}
 

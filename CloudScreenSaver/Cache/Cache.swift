@@ -36,11 +36,9 @@ enum Cache {
     static func updateIfTime() {
         let lastFetch   = getLastUpdate()
         let timeBetween = Preferences.retrieveFromFile().updateFrequency
-        print(timeBetween)
         let nextFetch   = lastFetch.addingTimeInterval(timeBetween)
-        print(nextFetch)
         if  nextFetch <= Date() {
-            print("updating")
+            print("updating...")
             updateFromCloud()
         }
     }
@@ -68,7 +66,7 @@ enum Cache {
                 let date = String(Date().timeIntervalSince1970)
                 try! date.write(to: Paths.lastUpdateFile, atomically: true, encoding: .utf8)
             case .failure(let error):
-                print(error)
+                print("listFiles error: \(error)")
             }
         }
     }
@@ -76,11 +74,11 @@ enum Cache {
     // MARK: - Add + Remove
     static func saveFile(currentUrl: URL, file: S3File) {
         // save file
-        let savedURL = Paths.cacheFolder.appendingPathComponent(file.name)
+        let savedURL = Paths.cacheFolder.appendingPathComponent(file.localName)
         do {
             try FileManager.default.moveItem(at: currentUrl, to: savedURL)
         } catch {
-            print ("file error: \(error)")
+            print ("saveFile error: \(error)")
         }
         
         // update index
@@ -97,7 +95,7 @@ enum Cache {
     
     static func removeFile(file: S3File) {
         // save file
-        let savedURL = Paths.cacheFolder.appendingPathComponent(file.name)
+        let savedURL = Paths.cacheFolder.appendingPathComponent(file.localName)
         do {
             try FileManager.default.removeItem(at: savedURL)
         } catch {
@@ -114,9 +112,9 @@ enum Cache {
     
     // MARK: - Retrieving
     static func getVideo(_ file: S3File) -> AVAsset? {
-        let url = Paths.cacheFolder.appendingPathComponent(file.name)
+        let url = Paths.cacheFolder.appendingPathComponent(file.localName)
         if !FileManager.default.fileExists(atPath: url.path) {
-            print("\(file.name) not found")
+            print("\(file.localName) not found")
             return nil
         }
         return AVAsset(url: url)
@@ -136,7 +134,7 @@ enum Cache {
 
 extension URL {
     func getDecodableFile<Dest: Decodable>() -> Dest? {
-        let data = try! Data(contentsOf: self)
+        guard let data = try? Data(contentsOf: self) else { return nil }
         let decoder = JSONDecoder()
         let files = (try? decoder.decode(Dest.self, from: data))
         return files
