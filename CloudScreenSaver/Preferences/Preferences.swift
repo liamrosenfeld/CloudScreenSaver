@@ -10,6 +10,7 @@ import Foundation
 struct Preferences: Codable {
     var bucketName: String = ""
     var updateFrequency: TimeInterval = 0
+    var loopCount: Int = 0
     
     static func retrieveFromFile() -> Preferences {
         let existingFilesData = try! Data(contentsOf: Paths.preferencesFile)

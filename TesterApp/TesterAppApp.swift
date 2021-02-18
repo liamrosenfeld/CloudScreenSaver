@@ -15,7 +15,7 @@ struct TesterAppApp: App {
         }
         Settings {
             PreferencesView(window: NSWindow())
-                .frame(width: 450, height: 350)
+                .frame(width: 350, height: 500)
         }
     }
 }

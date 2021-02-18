@@ -15,10 +15,11 @@ final class VideoPlayer {
     // MARK: Lifecycle
     init() {
         // Get each video from the cache
+        let loopCount = Preferences.retrieveFromFile().loopCount
         let items = Cache.getIndex().reduce(into: [AVPlayerItem]()) { (players, file) in
             guard let asset = Cache.getVideo(file) else { return }
             let player = AVPlayerItem(asset: asset)
-            players.append(player)
+            players.append(contentsOf: Array(copy: player, count: loopCount))
         }
         
         // Make player
@@ -83,4 +84,11 @@ final class VideoPlayer {
 
 extension NSNotification.Name {
     static let NewVideoDownloaded: Self = NSNotification.Name(rawValue: "NewVideoDownloaded")
+}
+
+fileprivate extension Array where Element: AVPlayerItem {
+    init(copy item: Element, count: Int) {
+        let elements = [Int](0..<count).compactMap { _ in return item.copy() as? Element }
+        self.init(elements)
+    }
 }
