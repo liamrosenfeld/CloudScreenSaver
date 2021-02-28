@@ -16,7 +16,7 @@ final class VideoPlayer {
     init() {
         // Get each video from the cache
         let loopCount = Preferences.retrieveFromFile().loopCount
-        let items = Cache.getIndex().reduce(into: [AVPlayerItem]()) { (players, file) in
+        let items = Cache.getVideoIndex().reduce(into: [AVPlayerItem]()) { (players, file) in
             guard let asset = Cache.getVideo(file) else { return }
             let player = AVPlayerItem(asset: asset)
             players.append(contentsOf: Array(copy: player, count: loopCount))
@@ -33,7 +33,7 @@ final class VideoPlayer {
         unobserve()
     }
     
-    // MARK: - Actions
+    // MARK: - Toggle Playback
     func play() {
         queue.play()
     }
@@ -80,10 +80,6 @@ final class VideoPlayer {
             object: nil
         )
     }
-}
-
-extension NSNotification.Name {
-    static let NewVideoDownloaded: Self = NSNotification.Name(rawValue: "NewVideoDownloaded")
 }
 
 fileprivate extension Array where Element: AVPlayerItem {

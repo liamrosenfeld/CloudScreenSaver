@@ -27,7 +27,8 @@ enum Cache {
             }
             
             // clear index
-            try? FileManager.default.removeItem(at: Paths.cacheIndexFile)
+            try? FileManager.default.removeItem(at: Paths.cacheVideoIndexFile)
+            try? FileManager.default.removeItem(at: Paths.cacheImageIndexFile)
         } catch {
             fatalError("Error during removal of videos: \(error.localizedDescription)")
         }
@@ -51,7 +52,7 @@ enum Cache {
             switch result {
             case .success(let files):
                 // get diff
-                let existingFiles = getIndex()
+                let existingFiles = getVideoIndex().union(getImageIndex())
                 let diff = files.diff(old: existingFiles)
                 
                 // apply diff
@@ -81,15 +82,46 @@ enum Cache {
             print ("saveFile error: \(error)")
         }
         
+        // sort
+        // (extensions were lowercased in xml parser)
+        let videoExts = ["mov", "mp4"]
+        let imageExts = ["png", "jpg", "jpeg"]
+        
+        var type: MediaType = .video
+        if videoExts.contains(file.ext) {
+            type = .video
+        } else if imageExts.contains(file.ext) {
+            type = .image
+        } else {
+            print("\(file.ext) is not a valid format")
+            return
+        }
+        
         // update index
-        var files = getIndex()
+        let index: URL = {
+            switch type {
+            case .video:
+                return Paths.cacheVideoIndexFile
+            case .image:
+                return Paths.cacheImageIndexFile
+            }
+        }()
+        var files = index.getDecodableFile() ?? Set<S3File>()
         files.update(with: file)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(files)
-        FileManager.default.createFile(atPath: Paths.cacheIndexFile.path, contents: data, attributes: nil)
+        FileManager.default.createFile(atPath: index.path, contents: data, attributes: nil)
         
-        // notify video display
-        let notification = Notification(name: .NewVideoDownloaded, object: file, userInfo: nil)
+        // notify respective player
+        let notif: Notification.Name = {
+            switch type {
+            case .video:
+                return .NewVideoDownloaded
+            case .image:
+                return .NewImageDownloaded
+            }
+        }()
+        let notification = Notification(name: notif, object: file, userInfo: nil)
         NotificationCenter.default.post(notification)
     }
     
@@ -103,11 +135,11 @@ enum Cache {
         }
         
         // update index
-        var files = getIndex()
+        var files = getVideoIndex()
         files.remove(file)
         let encoder = JSONEncoder()
         let data = try! encoder.encode(files)
-        FileManager.default.createFile(atPath: Paths.cacheIndexFile.path, contents: data, attributes: nil)
+        FileManager.default.createFile(atPath: Paths.cacheVideoIndexFile.path, contents: data, attributes: nil)
     }
     
     // MARK: - Retrieving
@@ -120,9 +152,22 @@ enum Cache {
         return AVAsset(url: url)
     }
     
+    static func getImage(_ file: S3File) -> NSImage? {
+        let url = Paths.cacheFolder.appendingPathComponent(file.localName)
+        if !FileManager.default.fileExists(atPath: url.path) {
+            print("\(file.localName) not found")
+            return nil
+        }
+        return NSImage(contentsOf: url)!
+    }
+    
     // MARK: - Internal Files
-    static func getIndex() -> Set<S3File> {
-        return Paths.cacheIndexFile.getDecodableFile() ?? Set<S3File>()
+    static func getVideoIndex() -> Set<S3File> {
+        return Paths.cacheVideoIndexFile.getDecodableFile() ?? Set<S3File>()
+    }
+    
+    static func getImageIndex() -> Set<S3File> {
+        return Paths.cacheImageIndexFile.getDecodableFile() ?? Set<S3File>()
     }
     
     static func getLastUpdate() -> Date {
@@ -148,4 +193,9 @@ extension Set where Element: Equatable {
         let removed = difference.intersection(old)
         return (added, removed)
     }
+}
+
+enum MediaType {
+    case video
+    case image
 }

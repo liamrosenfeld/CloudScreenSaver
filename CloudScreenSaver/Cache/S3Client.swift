@@ -96,7 +96,7 @@ struct S3Client {
         func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
             if elementName == "Contents" {
                 let name: NSString = fileName as NSString
-                let file = S3File(name: name.deletingPathExtension, ext: name.pathExtension, etag: fileTag)
+                let file = S3File(name: name.deletingPathExtension, ext: name.pathExtension.lowercased(), etag: fileTag)
                 files.insert(file)
             }
         }

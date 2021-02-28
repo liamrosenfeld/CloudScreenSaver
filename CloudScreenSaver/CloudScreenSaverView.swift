@@ -11,55 +11,42 @@ import SwiftUI
 
 class CloudScreenSaverView: ScreenSaverView {
     
+    var contentPlayer: ContentPlayer
+    
     // MARK: Initialization
+    static let secondPerFrame = 1.0 / 30.0
+    
     override init?(frame: NSRect, isPreview: Bool) {
+        // frames in screensavers are given relative to the main monitor
+        // this undoes this because this frame is used independently on each monitor
+        let adjustedFrame = NSRect(origin: .zero, size: frame.size)
+        
+        contentPlayer = ContentPlayer(frame: adjustedFrame)
         super.init(frame: frame, isPreview: isPreview)
-        self.animationTimeInterval = Self.secondPerFrame
+        
+        setupLayer()
         Cache.updateIfTime()
-        configure()
     }
     
     required init?(coder decoder: NSCoder) {
-        super.init(coder: decoder)
-        animationTimeInterval = Self.secondPerFrame
-        Cache.updateIfTime()
-        configure()
+        fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: Constant
-    static let secondPerFrame = 1.0 / 30.0
-    static let backgroundColor = CGColor(red: 0.00, green: 0.01, blue: 0.00, alpha: 1.0)
-    
-    // MARK: Video Player
-    var videoPlayer: VideoPlayer?
-    
-    func configure() {
-        // create video player
-        videoPlayer = VideoPlayer()
-        
-        // add layer
+    func setupLayer() {
         self.wantsLayer = true
-        configureVideoLayer(videoPlayer!.layer)
-        self.layer = videoPlayer?.layer
+        self.layer = contentPlayer
+        self.animationTimeInterval = Self.secondPerFrame
     }
-    
-    func configureVideoLayer(_ videoLayer: AVPlayerLayer) {
-        videoLayer.frame = bounds
-        videoLayer.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
-        videoLayer.needsDisplayOnBoundsChange = true
-        videoLayer.contentsGravity = .resizeAspect
-        videoLayer.backgroundColor = Self.backgroundColor
-    }
-    
+
     // MARK: Lifecycle
     override func startAnimation() {
         super.startAnimation()
-        videoPlayer?.play()
+        contentPlayer.play()
     }
     
     override func stopAnimation() {
         super.stopAnimation()
-        videoPlayer?.pause()
+        contentPlayer.pause()
     }
     
     // MARK: Preferences

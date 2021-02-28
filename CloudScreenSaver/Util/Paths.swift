@@ -31,8 +31,12 @@ enum Paths {
         return rootFile(named: "preferences.json")
     }()
     
-    static var cacheIndexFile: URL = {
-        return rootFile(named: "cache-index.json")
+    static var cacheVideoIndexFile: URL = {
+        return rootFile(named: "cache-video-index.json")
+    }()
+    
+    static var cacheImageIndexFile: URL = {
+        return rootFile(named: "cache-image-index.json")
     }()
     
     static var lastUpdateFile: URL = {
