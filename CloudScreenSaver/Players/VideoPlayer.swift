@@ -44,12 +44,14 @@ final class VideoPlayer {
     
     // MARK: - Observers
     func observe() {
-        // loop the video
+        // loop the videos
+        // when a video finishes, move it to the end of the queue
         NotificationCenter.default.addObserver(
             forName: .AVPlayerItemDidPlayToEndTime,
             object: nil,
             queue: nil
         ) { _ in
+            NotificationCenter.default.post(Notification(name: .ContentFinished))
             guard let currentItem = self.queue.currentItem?.copy() as? AVPlayerItem else { return }
             self.queue.insert(currentItem, after: self.queue.items().last)
         }

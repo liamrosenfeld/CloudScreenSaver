@@ -18,12 +18,30 @@ final class ImagePlayer: CALayer {
         images = Cache.getImageIndex().compactMap { Cache.getImage($0) }
         super.init()
         
-        let image = images[0]
-        self.contents = image
+        self.contents = images.first
+        
+        // add downloaded files to queue
+        NotificationCenter.default.addObserver(
+            forName: .NewImageDownloaded,
+            object: nil,
+            queue: nil
+        ) { notification in
+            let file = notification.object as! S3File
+            guard let newImage = Cache.getImage(file) else { return }
+            self.images.append(newImage)
+        }
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(
+            self,
+            name: .NewImageDownloaded,
+            object: nil
+        )
     }
     
     // MARK: - Looping
@@ -36,6 +54,15 @@ final class ImagePlayer: CALayer {
     }
     
     func nextImage(timer: Timer ) {
+        // check that there are images
+        guard !images.isEmpty else {
+            return
+        }
+        
+        // notify content view of switch
+        NotificationCenter.default.post(Notification(name: .ContentFinished))
+        
+        // switch image
         index += 1
         if index == images.count {
             index = 0
