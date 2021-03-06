@@ -12,6 +12,10 @@ final class VideoPlayer {
     let layer: AVPlayerLayer
     let queue: AVQueuePlayer
     
+    var isEnabled: Bool {
+        queue.items().count != 0
+    }
+    
     // MARK: Lifecycle
     init() {
         // Get each video from the cache

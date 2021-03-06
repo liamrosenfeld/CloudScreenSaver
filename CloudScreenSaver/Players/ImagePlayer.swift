@@ -10,15 +10,19 @@ import AppKit
 final class ImagePlayer: CALayer {
     // MARK: - Properties
     var timer: Timer?
-    var images: [NSImage]
+    var imgQueue: [NSImage]
     var index: Int = 0
+    
+    var isEnabled: Bool {
+        imgQueue.count != 0
+    }
     
     // MARK: - Init
     override init() {
-        images = Cache.getImageIndex().compactMap { Cache.getImage($0) }
+        imgQueue = Cache.getImageIndex().compactMap { Cache.getImage($0) }
         super.init()
         
-        self.contents = images.first
+        self.contents = imgQueue.first
         
         // add downloaded files to queue
         NotificationCenter.default.addObserver(
@@ -26,9 +30,10 @@ final class ImagePlayer: CALayer {
             object: nil,
             queue: nil
         ) { notification in
+            // add image to queue
             let file = notification.object as! S3File
             guard let newImage = Cache.getImage(file) else { return }
-            self.images.append(newImage)
+            self.imgQueue.append(newImage)
         }
     }
     
@@ -53,9 +58,9 @@ final class ImagePlayer: CALayer {
         timer?.invalidate()
     }
     
-    func nextImage(timer: Timer ) {
+    func nextImage(timer: Timer) {
         // check that there are images
-        guard !images.isEmpty else {
+        guard !imgQueue.isEmpty else {
             return
         }
         
@@ -64,10 +69,10 @@ final class ImagePlayer: CALayer {
         
         // switch image
         index += 1
-        if index == images.count {
+        if index == imgQueue.count {
             index = 0
         }
-        self.contents = images[index]
+        self.contents = imgQueue[index]
     }
     
 }

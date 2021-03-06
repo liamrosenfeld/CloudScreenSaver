@@ -12,8 +12,12 @@ final class ContentPlayer: CALayer {
     private let videoPlayer: VideoPlayer
     private let imagePlayer: ImagePlayer
     
-    private var currentPlayer: MediaType
+    private var currentPlayer: PlayerType
     private var didFinishObserver: NSObjectProtocol?
+    
+    private let noPlayerLayer: CATextLayer
+    private var vidDownObserver: NSObjectProtocol?
+    private var imgDownObserver: NSObjectProtocol?
     
     private static let backgroundColor = CGColor(red: 0.00, green: 0.01, blue: 0.00, alpha: 1.0)
     
@@ -22,13 +26,17 @@ final class ContentPlayer: CALayer {
         // init players
         self.videoPlayer = VideoPlayer()
         self.imagePlayer = ImagePlayer()
-        self.currentPlayer = .image
+        self.currentPlayer = .none
+        
+        self.noPlayerLayer = CATextLayer()
+        noPlayerLayer.fontSize = 30
+        noPlayerLayer.string = "Downloading Screensavers. If this screen persists, check screen saver and network preferences."
         
         // setup layers
         super.init()
         self.frame = frame
-        configure()
-        scheduleNextSwitch()
+        configureLayers()
+        activatePlayers()
     }
     
     required init?(coder: NSCoder) {
@@ -39,9 +47,99 @@ final class ContentPlayer: CALayer {
         if let observer = didFinishObserver {
             NotificationCenter.default.removeObserver(observer)
         }
+        if let observer = vidDownObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        if let observer = imgDownObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
-    private func configure() {
+    // MARK: - Activating Players
+    private func activatePlayers() {
+        let videoEnabled = videoPlayer.isEnabled
+        let imageEnabled = imagePlayer.isEnabled
+        
+        if videoEnabled && imageEnabled {
+            // if both players are enabled, enable switching immediately
+            // starting with videos
+            currentPlayer = .video
+            self.addSublayer(videoPlayer.layer)
+            scheduleNextSwitch()
+        } else if videoEnabled || imageEnabled {
+            // if only one is enabled, start that one
+            // then start switching if the other is added
+            if videoEnabled {
+                // video is immediately enabled
+                currentPlayer = .video
+                self.addSublayer(videoPlayer.layer)
+                videoPlayer.play()
+                
+                // observer set to enable image if downloaded
+                imgDownObserver = NotificationCenter.default.addObserver(
+                    forName: .NewImageDownloaded,
+                    object: nil,
+                    queue: nil
+                ) { notification in
+                    self.scheduleNextSwitch()
+                    NotificationCenter.default.removeObserver(self.imgDownObserver!)
+                }
+            } else {
+                // image is immediately enabled
+                currentPlayer = .image
+                self.addSublayer(imagePlayer)
+                imagePlayer.play()
+                
+                // observer set to enable video if downloaded
+                vidDownObserver = NotificationCenter.default.addObserver(
+                    forName: .NewVideoDownloaded,
+                    object: nil,
+                    queue: nil
+                ) { notification in
+                    self.scheduleNextSwitch()
+                    NotificationCenter.default.removeObserver(self.vidDownObserver!)
+                }
+            }
+        } else {
+            // neither are enabled
+            // add temp no video layer
+            self.addSublayer(noPlayerLayer)
+            
+            // add observers for both
+            vidDownObserver = NotificationCenter.default.addObserver(
+                forName: .NewVideoDownloaded,
+                object: nil,
+                queue: nil
+            ) { [self] notification in
+                if imagePlayer.isEnabled {
+                    scheduleNextSwitch()
+                } else {
+                    replaceSublayer(noPlayerLayer, with: videoPlayer.layer)
+                    currentPlayer = .video
+                    videoPlayer.play()
+                }
+                NotificationCenter.default.removeObserver(vidDownObserver!)
+            }
+            
+            imgDownObserver = NotificationCenter.default.addObserver(
+                forName: .NewImageDownloaded,
+                object: nil,
+                queue: nil
+            ) { [self] notification in
+                if videoPlayer.isEnabled {
+                    scheduleNextSwitch()
+                } else {
+                    replaceSublayer(noPlayerLayer, with: imagePlayer)
+                    currentPlayer = .image
+                    imagePlayer.play()
+                }
+                NotificationCenter.default.removeObserver(imgDownObserver!)
+            }
+        }
+    }
+    
+    // MARK: - Layers
+    private func configureLayers() {
         // configure this layer
         self.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
         self.needsDisplayOnBoundsChange = true
@@ -51,12 +149,10 @@ final class ContentPlayer: CALayer {
         // configure sub layers
         configureLayer(videoPlayer.layer)
         configureLayer(imagePlayer)
+        configureLayer(noPlayerLayer)
         
         // this is only needed on the video layer
         videoPlayer.layer.needsDisplayOnBoundsChange = true
-        
-        // add initial layer
-        self.addSublayer(imagePlayer)
     }
     
     private func configureLayer(_ layer: CALayer) {
@@ -93,6 +189,8 @@ final class ContentPlayer: CALayer {
             self.replaceSublayer(imagePlayer, with: videoPlayer.layer)
             currentPlayer = .video
             imagePlayer.pause()
+        case .none:
+            print("no active player to switch")
         }
         
         // remove observer because prepare has been handled
@@ -111,6 +209,8 @@ final class ContentPlayer: CALayer {
             videoPlayer.play()
         case .image:
             imagePlayer.play()
+        case .none:
+            print("no active player to play")
         }
     }
     
@@ -120,6 +220,14 @@ final class ContentPlayer: CALayer {
             videoPlayer.pause()
         case .image:
             imagePlayer.pause()
+        case .none:
+            print("no active player to pause")
         }
     }
+}
+
+enum PlayerType {
+    case video
+    case image
+    case none
 }
