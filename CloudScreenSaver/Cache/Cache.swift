@@ -34,54 +34,8 @@ enum Cache {
         }
     }
     
-    static func updateIfTime() {
-        let lastFetch   = getLastUpdate()
-        let timeBetween = Preferences.retrieveFromFile().updateFrequency
-        let nextFetch   = lastFetch.addingTimeInterval(timeBetween)
-        if  nextFetch <= Date() {
-            print("updating...")
-            updateFromCloud()
-        }
-    }
-    
-    static func updateFromCloud() {
-        guard let bucket = S3Client(bucketName: "cloud-screen-saver") else {
-            fatalError("invalid bucket")
-        }
-        bucket.listFiles { result in
-            switch result {
-            case .success(let files):
-                // get diff
-                let existingFiles = getVideoIndex().union(getImageIndex())
-                let diff = files.diff(old: existingFiles)
-                
-                // apply diff
-                diff.added.forEach { file in
-                    bucket.downloadFile(file)
-                }
-                diff.removed.forEach { file in
-                    removeFile(file: file)
-                }
-                
-                // record fetch time
-                let date = String(Date().timeIntervalSince1970)
-                try! date.write(to: Paths.lastUpdateFile, atomically: true, encoding: .utf8)
-            case .failure(let error):
-                print("listFiles error: \(error)")
-            }
-        }
-    }
-    
     // MARK: - Add + Remove
     static func saveFile(currentUrl: URL, file: S3File) {
-        // save file
-        let savedURL = Paths.cacheFolder.appendingPathComponent(file.localName)
-        do {
-            try FileManager.default.moveItem(at: currentUrl, to: savedURL)
-        } catch {
-            print ("saveFile error: \(error)")
-        }
-        
         // sort
         // (extensions were lowercased in xml parser)
         let videoExts = ["mov", "mp4"]
@@ -95,6 +49,15 @@ enum Cache {
         } else {
             print("\(file.ext) is not a valid format")
             return
+        }
+        
+        // save file
+        let saveURL = Paths.cacheFolder.appendingPathComponent(file.localName)
+        do {
+            try FileManager.default.moveItem(at: currentUrl, to: saveURL)
+            print("saved \(saveURL)")
+        } catch {
+            print ("saveFile error: \(error)")
         }
         
         // update index

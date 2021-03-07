@@ -74,7 +74,7 @@ struct PreferencesView: View {
             Group {
                 Text("Actions").font(.title2)
                 
-                Button("Update Now", action: Cache.updateFromCloud)
+                Button("Update Now", action: Networking.updateFromCloud)
                 
                 Button("Clear Cache", action: Cache.clearCache)
                 

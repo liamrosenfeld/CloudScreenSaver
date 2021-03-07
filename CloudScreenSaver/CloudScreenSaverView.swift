@@ -25,7 +25,7 @@ class CloudScreenSaverView: ScreenSaverView {
         super.init(frame: frame, isPreview: isPreview)
         
         setupLayer()
-        Cache.updateIfTime()
+        Networking.updateIfTime()
     }
     
     required init?(coder decoder: NSCoder) {

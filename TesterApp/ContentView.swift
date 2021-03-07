@@ -13,7 +13,6 @@ struct ContentView: View {
             GeometryReader { reader in
                 ScreenSaver(frame: NSRect(origin: .zero, size: reader.size))
             }
-            Button("Update if time", action: Cache.updateIfTime)
         }
     }
 }
