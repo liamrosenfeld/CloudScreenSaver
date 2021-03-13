@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct Preferences: Codable {
+struct Preferences {
     var bucketName: String = ""
     var updateFrequency: TimeInterval = 0
-    var loopCount: Int = 0
+    @GreaterThanOne var loopCount: Int = 0
     
     static func retrieveFromFile() -> Preferences {
         let existingFilesData = try! Data(contentsOf: Paths.preferencesFile)
@@ -25,3 +25,5 @@ struct Preferences: Codable {
         FileManager.default.createFile(atPath: Paths.preferencesFile.path, contents: data, attributes: nil)
     }
 }
+
+extension Preferences: Codable {}

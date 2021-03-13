@@ -34,6 +34,10 @@
 		0C7E3DB5257D66EC005F707A /* S3Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7E3DB4257D66EC005F707A /* S3Client.swift */; };
 		0C7E3DB6257D66EC005F707A /* S3Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7E3DB4257D66EC005F707A /* S3Client.swift */; };
 		0C7EE4AE257AFD8A00E639D0 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7EE4AD257AFD8A00E639D0 /* Cache.swift */; };
+		0C891DB525FD7BD1004FA776 /* GreaterThanOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C891DB425FD7BD1004FA776 /* GreaterThanOne.swift */; };
+		0C891DB625FD7BDF004FA776 /* GreaterThanOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C891DB425FD7BD1004FA776 /* GreaterThanOne.swift */; };
+		0C891DB825FD7BF3004FA776 /* NumberField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C891DB725FD7BF3004FA776 /* NumberField.swift */; };
+		0C891DB925FD7C03004FA776 /* NumberField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C891DB725FD7BF3004FA776 /* NumberField.swift */; };
 		0CAF454725F55A840067EFF5 /* URLSesson+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454625F55A840067EFF5 /* URLSesson+Combine.swift */; };
 		0CAF454825F55A9C0067EFF5 /* URLSesson+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454625F55A840067EFF5 /* URLSesson+Combine.swift */; };
 		0CAF454A25F55AF00067EFF5 /* S3File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454925F55AF00067EFF5 /* S3File.swift */; };
@@ -60,6 +64,8 @@
 		0C78C49B250F93AB00C312EB /* TesterApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TesterApp.entitlements; sourceTree = "<group>"; };
 		0C7E3DB4257D66EC005F707A /* S3Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3Client.swift; sourceTree = "<group>"; };
 		0C7EE4AD257AFD8A00E639D0 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		0C891DB425FD7BD1004FA776 /* GreaterThanOne.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreaterThanOne.swift; sourceTree = "<group>"; };
+		0C891DB725FD7BF3004FA776 /* NumberField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NumberField.swift; sourceTree = "<group>"; };
 		0CAF454625F55A840067EFF5 /* URLSesson+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSesson+Combine.swift"; sourceTree = "<group>"; };
 		0CAF454925F55AF00067EFF5 /* S3File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3File.swift; sourceTree = "<group>"; };
 		0CEFBFF7250D524700776882 /* CloudScreenSaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CloudScreenSaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +96,8 @@
 			children = (
 				0C503EA625D2202C004C0715 /* Preferences.swift */,
 				0C049B8E25D35B61002FE3D8 /* PreferencesView.swift */,
+				0C891DB425FD7BD1004FA776 /* GreaterThanOne.swift */,
+				0C891DB725FD7BF3004FA776 /* NumberField.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -309,6 +317,7 @@
 				0C2250B825DF255E00BC9878 /* ContentPlayer.swift in Sources */,
 				0CAF454825F55A9C0067EFF5 /* URLSesson+Combine.swift in Sources */,
 				0C196EBF25DE00B300AA1327 /* Notifications.swift in Sources */,
+				0C891DB625FD7BDF004FA776 /* GreaterThanOne.swift in Sources */,
 				0C41C917257B59EE00106986 /* Cache.swift in Sources */,
 				0C196EBA25DDFFE200AA1327 /* ImagePlayer.swift in Sources */,
 				0C049B9425D35B96002FE3D8 /* PreferencesView.swift in Sources */,
@@ -318,6 +327,7 @@
 				0CAF454B25F55B060067EFF5 /* S3File.swift in Sources */,
 				0C78C4A7250F968000C312EB /* VideoPlayer.swift in Sources */,
 				0C658E4B25F4494E00ADFB24 /* Networking.swift in Sources */,
+				0C891DB925FD7C03004FA776 /* NumberField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,11 +340,13 @@
 				0CAF454725F55A840067EFF5 /* URLSesson+Combine.swift in Sources */,
 				0C7EE4AE257AFD8A00E639D0 /* Cache.swift in Sources */,
 				0C658E4A25F4494E00ADFB24 /* Networking.swift in Sources */,
+				0C891DB825FD7BF3004FA776 /* NumberField.swift in Sources */,
 				0C196EBE25DE00B300AA1327 /* Notifications.swift in Sources */,
 				0C503EA725D2202C004C0715 /* Preferences.swift in Sources */,
 				0C049B8325D35519002FE3D8 /* Paths.swift in Sources */,
 				0C658E4725F4475700ADFB24 /* FileListDecoder.swift in Sources */,
 				0C196EB925DDFFE200AA1327 /* ImagePlayer.swift in Sources */,
+				0C891DB525FD7BD1004FA776 /* GreaterThanOne.swift in Sources */,
 				0CEFBFFD250D524700776882 /* CloudScreenSaverView.swift in Sources */,
 				0C7E3DB5257D66EC005F707A /* S3Client.swift in Sources */,
 				0C049B8F25D35B61002FE3D8 /* PreferencesView.swift in Sources */,

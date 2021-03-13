@@ -29,13 +29,7 @@ struct PreferencesView: View {
                     Text("Content").font(.title3)
                         .padding(.top, 3)
                     
-                    Text("Video Loop Count")
-                    HStack {
-                        TextField("Video Loop Count", text: $loopText)
-                            .labelsHidden()
-                        Stepper("Video Loop Count", value: $preferences.loopCount, in: 1...100)
-                            .labelsHidden()
-                    }.frame(maxWidth: 200)
+                    NumberField($preferences.loopCount, title: "Video Loop Count")
                 }
                 
                 Group {
@@ -86,16 +80,6 @@ struct PreferencesView: View {
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .onChange(of: preferences.loopCount) { value in
-            loopText = "\(value)"
-        }
-        .onChange(of: loopText) { value in
-            guard let num = Int(value), num > 0 else {
-                loopText = "\(preferences.loopCount)"
-                return
-            }
-            preferences.loopCount = num
-        }
     }
     
     private func close() {
