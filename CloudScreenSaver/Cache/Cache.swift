@@ -7,6 +7,7 @@
 
 import Cocoa
 import AVKit
+import Combine
 
 /**
 In `.../Application Support/CloudScreenSaver/Cache/`
@@ -17,6 +18,10 @@ In `.../Application Support/CloudScreenSaver/Cache/`
  */
 
 enum Cache {
+    // MARK: - Subjects
+    static let newVideoDownloaded = PassthroughSubject<S3File, Never>()
+    static let newImageDownloaded = PassthroughSubject<S3File, Never>()
+    
     // MARK: - Actions
     static func clearCache() {
         do {
@@ -76,16 +81,12 @@ enum Cache {
         FileManager.default.createFile(atPath: index.path, contents: data, attributes: nil)
         
         // notify respective player
-        let notif: Notification.Name = {
-            switch type {
-            case .video:
-                return .NewVideoDownloaded
-            case .image:
-                return .NewImageDownloaded
-            }
-        }()
-        let notification = Notification(name: notif, object: file, userInfo: nil)
-        NotificationCenter.default.post(notification)
+        switch type {
+        case .video:
+            return newVideoDownloaded.send(file)
+        case .image:
+            return newImageDownloaded.send(file)
+        }
     }
     
     static func removeFile(file: S3File) {

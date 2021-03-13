@@ -6,11 +6,14 @@
 //
 
 import AVFoundation
+import Combine
 
 final class VideoPlayer {
     
     let layer: AVPlayerLayer
     let queue: AVQueuePlayer
+    
+    var subscriptions = Set<AnyCancellable>()
     
     var isEnabled: Bool {
         queue.items().count != 0
@@ -33,10 +36,6 @@ final class VideoPlayer {
         observe()
     }
     
-    deinit {
-        unobserve()
-    }
-    
     // MARK: - Toggle Playback
     func play() {
         queue.play()
@@ -50,41 +49,21 @@ final class VideoPlayer {
     func observe() {
         // loop the videos
         // when a video finishes, move it to the end of the queue
-        NotificationCenter.default.addObserver(
-            forName: .AVPlayerItemDidPlayToEndTime,
-            object: nil,
-            queue: nil
-        ) { _ in
-            NotificationCenter.default.post(Notification(name: .ContentFinished))
-            guard let currentItem = self.queue.currentItem?.copy() as? AVPlayerItem else { return }
-            self.queue.insert(currentItem, after: self.queue.items().last)
-        }
+        NotificationCenter.default
+            .publisher(for: .AVPlayerItemDidPlayToEndTime)
+            .sink { _ in
+                NotificationCenter.default.post(Notification(name: .ContentFinished))
+                guard let currentItem = self.queue.currentItem?.copy() as? AVPlayerItem else { return }
+                self.queue.insert(currentItem, after: self.queue.items().last)
+            }
+            .store(in: &subscriptions)
         
         // add downloaded files to queue
-        NotificationCenter.default.addObserver(
-            forName: .NewVideoDownloaded,
-            object: nil,
-            queue: nil
-        ) { notification in
-            let file = notification.object as! S3File
+        Cache.newVideoDownloaded.sink { file in
             guard let asset = Cache.getVideo(file) else { return }
             let player = AVPlayerItem(asset: asset)
             self.queue.insert(player, after: self.queue.items().last)
-        }
-    }
-    
-    func unobserve() {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: .AVPlayerItemDidPlayToEndTime,
-            object: nil
-        )
-        
-        NotificationCenter.default.removeObserver(
-            self,
-            name: .NewVideoDownloaded,
-            object: nil
-        )
+        }.store(in: &subscriptions)
     }
 }
 

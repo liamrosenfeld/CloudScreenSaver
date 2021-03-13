@@ -8,8 +8,6 @@
 import Foundation
 
 extension Notification.Name {
-    static let NewVideoDownloaded: Self = Notification.Name(rawValue: "NewVideoDownloaded")
-    static let NewImageDownloaded: Self = Notification.Name(rawValue: "NewImageDownloaded")
     static let ContentFinished: Self = Notification.Name(rawValue: "ContentFinished")
 }
  

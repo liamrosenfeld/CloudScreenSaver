@@ -6,12 +6,15 @@
 //
 
 import AppKit
+import Combine
 
 final class ImagePlayer: CALayer {
     // MARK: - Properties
     var timer: Timer?
     var imgQueue: [NSImage]
     var index: Int = 0
+    
+    var subscriptions = Set<AnyCancellable>()
     
     var isEnabled: Bool {
         imgQueue.count != 0
@@ -25,28 +28,15 @@ final class ImagePlayer: CALayer {
         self.contents = imgQueue.first
         
         // add downloaded files to queue
-        NotificationCenter.default.addObserver(
-            forName: .NewImageDownloaded,
-            object: nil,
-            queue: nil
-        ) { notification in
+        Cache.newImageDownloaded.sink { file in
             // add image to queue
-            let file = notification.object as! S3File
             guard let newImage = Cache.getImage(file) else { return }
             self.imgQueue.append(newImage)
-        }
+        }.store(in: &subscriptions)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    deinit {
-        NotificationCenter.default.removeObserver(
-            self,
-            name: .NewImageDownloaded,
-            object: nil
-        )
     }
     
     // MARK: - Looping

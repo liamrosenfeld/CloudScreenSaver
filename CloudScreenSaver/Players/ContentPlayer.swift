@@ -6,6 +6,7 @@
 //
 
 import AppKit
+import Combine
 
 final class ContentPlayer: CALayer {
     // MARK: - Properties
@@ -13,11 +14,11 @@ final class ContentPlayer: CALayer {
     private let imagePlayer: ImagePlayer
     
     private var currentPlayer: PlayerType
-    private var didFinishObserver: NSObjectProtocol?
+    private var didFinishSubscriber: AnyCancellable?
     
     private let noPlayerLayer: CATextLayer
-    private var vidDownObserver: NSObjectProtocol?
-    private var imgDownObserver: NSObjectProtocol?
+    private var vidDownSubscriber: AnyCancellable?
+    private var imgDownSubscriber: AnyCancellable?
     
     private static let backgroundColor = CGColor(red: 0.00, green: 0.01, blue: 0.00, alpha: 1.0)
     
@@ -43,18 +44,6 @@ final class ContentPlayer: CALayer {
         fatalError("init(coder:) has not been implemented")
     }
     
-    deinit {
-        if let observer = didFinishObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
-        if let observer = vidDownObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
-        if let observer = imgDownObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
-    }
-    
     // MARK: - Activating Players
     private func activatePlayers() {
         let videoEnabled = videoPlayer.isEnabled
@@ -76,13 +65,9 @@ final class ContentPlayer: CALayer {
                 videoPlayer.play()
                 
                 // observer set to enable image if downloaded
-                imgDownObserver = NotificationCenter.default.addObserver(
-                    forName: .NewImageDownloaded,
-                    object: nil,
-                    queue: nil
-                ) { notification in
+                imgDownSubscriber = Cache.newImageDownloaded.sink { _ in
                     self.scheduleNextSwitch()
-                    NotificationCenter.default.removeObserver(self.imgDownObserver!)
+                    self.imgDownSubscriber?.cancel()
                 }
             } else {
                 // image is immediately enabled
@@ -91,13 +76,9 @@ final class ContentPlayer: CALayer {
                 imagePlayer.play()
                 
                 // observer set to enable video if downloaded
-                vidDownObserver = NotificationCenter.default.addObserver(
-                    forName: .NewVideoDownloaded,
-                    object: nil,
-                    queue: nil
-                ) { notification in
+                vidDownSubscriber = Cache.newVideoDownloaded.sink { _ in
                     self.scheduleNextSwitch()
-                    NotificationCenter.default.removeObserver(self.vidDownObserver!)
+                    self.vidDownSubscriber?.cancel()
                 }
             }
         } else {
@@ -106,11 +87,7 @@ final class ContentPlayer: CALayer {
             self.addSublayer(noPlayerLayer)
             
             // add observers for both
-            vidDownObserver = NotificationCenter.default.addObserver(
-                forName: .NewVideoDownloaded,
-                object: nil,
-                queue: nil
-            ) { [self] notification in
+            vidDownSubscriber = Cache.newVideoDownloaded.sink { [self] _ in
                 if imagePlayer.isEnabled {
                     scheduleNextSwitch()
                 } else {
@@ -118,14 +95,10 @@ final class ContentPlayer: CALayer {
                     currentPlayer = .video
                     videoPlayer.play()
                 }
-                NotificationCenter.default.removeObserver(vidDownObserver!)
+                vidDownSubscriber?.cancel()
             }
             
-            imgDownObserver = NotificationCenter.default.addObserver(
-                forName: .NewImageDownloaded,
-                object: nil,
-                queue: nil
-            ) { [self] notification in
+            imgDownSubscriber = Cache.newImageDownloaded.sink { [self] _ in
                 if videoPlayer.isEnabled {
                     scheduleNextSwitch()
                 } else {
@@ -133,7 +106,7 @@ final class ContentPlayer: CALayer {
                     currentPlayer = .image
                     imagePlayer.play()
                 }
-                NotificationCenter.default.removeObserver(imgDownObserver!)
+                imgDownSubscriber?.cancel()
             }
         }
     }
@@ -168,12 +141,7 @@ final class ContentPlayer: CALayer {
     }
     
     private func prepareToSwitch() {
-        didFinishObserver = NotificationCenter.default.addObserver(
-            forName: .ContentFinished,
-            object: nil,
-            queue: nil,
-            using: switchPlayer
-        )
+        didFinishSubscriber = NotificationCenter.default.publisher(for: .ContentFinished).sink(receiveValue: switchPlayer)
     }
     
     private func switchPlayer(_: Notification) {
@@ -194,9 +162,7 @@ final class ContentPlayer: CALayer {
         }
         
         // remove observer because prepare has been handled
-        if let observer = didFinishObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
+        didFinishSubscriber?.cancel()
         
         // set "timer" for next switch
         scheduleNextSwitch()
