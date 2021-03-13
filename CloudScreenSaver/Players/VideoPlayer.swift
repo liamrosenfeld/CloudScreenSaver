@@ -59,11 +59,12 @@ final class VideoPlayer {
             .store(in: &subscriptions)
         
         // add downloaded files to queue
-        Cache.newVideoDownloaded.sink { file in
-            guard let asset = Cache.getVideo(file) else { return }
-            let player = AVPlayerItem(asset: asset)
-            self.queue.insert(player, after: self.queue.items().last)
-        }.store(in: &subscriptions)
+        Cache
+            .newVideoDownloaded
+            .compactMap { Cache.getVideo($0) }
+            .map { AVPlayerItem(asset: $0) }
+            .sink { self.queue.append($0) }
+            .store(in: &subscriptions)
     }
 }
 
@@ -71,5 +72,11 @@ fileprivate extension Array where Element: AVPlayerItem {
     init(copy item: Element, count: Int) {
         let elements = [Int](0..<count).compactMap { _ in return item.copy() as? Element }
         self.init(elements)
+    }
+}
+
+extension AVQueuePlayer {
+    func append(_ element: AVPlayerItem) {
+        insert(element, after: items().last)
     }
 }

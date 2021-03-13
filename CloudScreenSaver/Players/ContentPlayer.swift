@@ -65,10 +65,13 @@ final class ContentPlayer: CALayer {
                 videoPlayer.play()
                 
                 // observer set to enable image if downloaded
-                imgDownSubscriber = Cache.newImageDownloaded.sink { _ in
-                    self.scheduleNextSwitch()
-                    self.imgDownSubscriber?.cancel()
-                }
+                imgDownSubscriber = Cache
+                    .newImageDownloaded
+                    .receive(on: DispatchQueue.main)
+                    .sink { _ in
+                        self.scheduleNextSwitch()
+                        self.imgDownSubscriber?.cancel()
+                    }
             } else {
                 // image is immediately enabled
                 currentPlayer = .image
@@ -76,10 +79,13 @@ final class ContentPlayer: CALayer {
                 imagePlayer.play()
                 
                 // observer set to enable video if downloaded
-                vidDownSubscriber = Cache.newVideoDownloaded.sink { _ in
-                    self.scheduleNextSwitch()
-                    self.vidDownSubscriber?.cancel()
-                }
+                vidDownSubscriber = Cache
+                    .newVideoDownloaded
+                    .receive(on: DispatchQueue.main)
+                    .sink { _ in
+                        self.scheduleNextSwitch()
+                        self.vidDownSubscriber?.cancel()
+                    }
             }
         } else {
             // neither are enabled
@@ -87,27 +93,33 @@ final class ContentPlayer: CALayer {
             self.addSublayer(noPlayerLayer)
             
             // add observers for both
-            vidDownSubscriber = Cache.newVideoDownloaded.sink { [self] _ in
-                if imagePlayer.isEnabled {
-                    scheduleNextSwitch()
-                } else {
-                    replaceSublayer(noPlayerLayer, with: videoPlayer.layer)
-                    currentPlayer = .video
-                    videoPlayer.play()
+            vidDownSubscriber = Cache
+                .newVideoDownloaded
+                .receive(on: DispatchQueue.main)
+                .sink { [self] _ in
+                    if imagePlayer.isEnabled {
+                        scheduleNextSwitch()
+                    } else {
+                        replaceSublayer(noPlayerLayer, with: videoPlayer.layer)
+                        currentPlayer = .video
+                        videoPlayer.play()
+                    }
+                    vidDownSubscriber?.cancel()
                 }
-                vidDownSubscriber?.cancel()
-            }
             
-            imgDownSubscriber = Cache.newImageDownloaded.sink { [self] _ in
-                if videoPlayer.isEnabled {
-                    scheduleNextSwitch()
-                } else {
-                    replaceSublayer(noPlayerLayer, with: imagePlayer)
-                    currentPlayer = .image
-                    imagePlayer.play()
+            imgDownSubscriber = Cache
+                .newImageDownloaded
+                .receive(on: DispatchQueue.main)
+                .sink { [self] _ in
+                    if videoPlayer.isEnabled {
+                        scheduleNextSwitch()
+                    } else {
+                        replaceSublayer(noPlayerLayer, with: imagePlayer)
+                        currentPlayer = .image
+                        imagePlayer.play()
+                    }
+                    imgDownSubscriber?.cancel()
                 }
-                imgDownSubscriber?.cancel()
-            }
         }
     }
     
@@ -123,9 +135,6 @@ final class ContentPlayer: CALayer {
         configureLayer(videoPlayer.layer)
         configureLayer(imagePlayer)
         configureLayer(noPlayerLayer)
-        
-        // this is only needed on the video layer
-        videoPlayer.layer.needsDisplayOnBoundsChange = true
     }
     
     private func configureLayer(_ layer: CALayer) {
@@ -133,6 +142,7 @@ final class ContentPlayer: CALayer {
         layer.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
         layer.contentsGravity = .resizeAspect
         layer.backgroundColor = Self.backgroundColor
+        layer.needsDisplayOnBoundsChange = true
     }
     
     // MARK: - Switching Players
@@ -145,24 +155,26 @@ final class ContentPlayer: CALayer {
     }
     
     private func switchPlayer(_: Notification) {
+        // remove observer because prepare has been handled
+        didFinishSubscriber?.cancel()
+        
         // pause and switch sublayer
         switch currentPlayer {
         case .video:
             imagePlayer.play()
             self.replaceSublayer(videoPlayer.layer, with: imagePlayer)
-            currentPlayer = .image
             videoPlayer.pause()
+            currentPlayer = .image
+            
         case .image:
             videoPlayer.play()
             self.replaceSublayer(imagePlayer, with: videoPlayer.layer)
-            currentPlayer = .video
             imagePlayer.pause()
+            currentPlayer = .video
+            
         case .none:
             print("no active player to switch")
         }
-        
-        // remove observer because prepare has been handled
-        didFinishSubscriber?.cancel()
         
         // set "timer" for next switch
         scheduleNextSwitch()

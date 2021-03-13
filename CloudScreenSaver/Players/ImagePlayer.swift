@@ -28,11 +28,11 @@ final class ImagePlayer: CALayer {
         self.contents = imgQueue.first
         
         // add downloaded files to queue
-        Cache.newImageDownloaded.sink { file in
-            // add image to queue
-            guard let newImage = Cache.getImage(file) else { return }
-            self.imgQueue.append(newImage)
-        }.store(in: &subscriptions)
+        Cache
+            .newImageDownloaded
+            .compactMap { Cache.getImage($0) }
+            .sink { self.imgQueue.append($0) }
+            .store(in: &subscriptions)
     }
     
     required init?(coder: NSCoder) {
@@ -40,15 +40,23 @@ final class ImagePlayer: CALayer {
     }
     
     // MARK: - Looping
+    override func display() {
+        guard !imgQueue.isEmpty else {
+            return
+        }
+        self.contents = imgQueue[index]
+    }
+
     func play() {
         timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: nextImage)
+        timer?.fire()
     }
     
     func pause() {
         timer?.invalidate()
     }
     
-    func nextImage(timer: Timer) {
+    func nextImage(_: Timer) {
         // check that there are images
         guard !imgQueue.isEmpty else {
             return
@@ -62,7 +70,11 @@ final class ImagePlayer: CALayer {
         if index == imgQueue.count {
             index = 0
         }
-        self.contents = imgQueue[index]
+        
+        DispatchQueue.main.async {
+            self.contents = self.imgQueue[self.index]
+        }
+        
     }
     
 }
