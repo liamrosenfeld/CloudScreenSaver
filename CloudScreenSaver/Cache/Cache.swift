@@ -134,6 +134,10 @@ enum Cache {
         return Paths.cacheImageIndexFile.getDecodableFile() ?? Set<S3File>()
     }
     
+    static func getCombinedIndex() -> Set<S3File> {
+        return getVideoIndex().union(getImageIndex())
+    }
+    
     static func getLastUpdate() -> Date {
         let str = (try? String(contentsOf: Paths.lastUpdateFile)) ?? "0"
         let interval = Double(str) ?? 0

@@ -12,6 +12,13 @@ enum Networking {
     static var cancellables = Set<AnyCancellable>()
     
     static func updateIfTime() {
+        // always update if nothing is downloaded
+        if Cache.getCombinedIndex().count == 0 {
+            updateFromCloud()
+            return
+        }
+        
+        // update if update frequency preference has passed
         let lastFetch   = Cache.getLastUpdate()
         let timeBetween = Preferences.retrieveFromFile().updateFrequency
         let nextFetch   = lastFetch.addingTimeInterval(timeBetween)
@@ -75,7 +82,6 @@ enum Networking {
 
 fileprivate extension Set where Element == S3File {
     var diffFromIndex: (Self, Self) {
-        let existingFiles = Cache.getVideoIndex().union(Cache.getImageIndex())
-        return self.diff(old: existingFiles)
+        return self.diff(old: Cache.getCombinedIndex())
     }
 }
