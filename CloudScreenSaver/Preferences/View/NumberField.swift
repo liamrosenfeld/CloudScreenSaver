@@ -7,15 +7,10 @@
 
 import SwiftUI
 
-struct NumberField: View {
+struct NumberField<Number: Numeric & Strideable>: View {
     
-    @Binding private var numberValue: Int
-    @State private var title: String
-    
-    init(_ number: Binding<Int>, title: String) {
-        self._numberValue = number
-        self.title = title
-    }
+    @Binding var numberValue: Number
+    @State var title: String
     
     var body: some View {
         HStack {

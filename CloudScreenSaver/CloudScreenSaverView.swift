@@ -52,12 +52,12 @@ class CloudScreenSaverView: ScreenSaverView {
     // MARK: Preferences
     lazy var preferencesWindow: NSWindow = {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 350, height: 500),
+            contentRect: NSRect(x: 0, y: 0, width: 450, height: 500),
             styleMask: [.titled, .fullSizeContentView, .utilityWindow],
             backing: .buffered, defer: false)
         window.center()
         window.setFrameAutosaveName("Main Window")
-        let view = NSHostingView(rootView: PreferencesView(window: window))
+        let view = NSHostingView(rootView: OptionsView(window: window))
         window.contentView = view
         return window
     }()

@@ -9,8 +9,10 @@ import Foundation
 
 struct Preferences {
     var bucketName: String = ""
-    var updateFrequency: TimeInterval = 0
-    @GreaterThanOne var loopCount: Int = 0
+    var updateFrequency: TimeInterval = 86400.0
+    @GreaterThanOne var loopCount: Int = 1
+    @GreaterThanOne var imageDuration: TimeInterval = 3
+    @GreaterThanOne var switchFrequency: Int = 6
     
     static func retrieveFromFile() -> Preferences {
         let existingFilesData = try! Data(contentsOf: Paths.preferencesFile)

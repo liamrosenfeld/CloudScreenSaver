@@ -13,6 +13,7 @@ final class ImagePlayer: CALayer {
     var timer: Timer?
     var imgQueue: [NSImage]
     var index: Int = 0
+    var imgDuration = Preferences.retrieveFromFile().imageDuration
     
     var subscriptions = Set<AnyCancellable>()
     
@@ -48,7 +49,7 @@ final class ImagePlayer: CALayer {
     }
 
     func play() {
-        timer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true, block: nextImage)
+        timer = Timer.scheduledTimer(withTimeInterval: imgDuration, repeats: true, block: nextImage)
         timer?.fire()
     }
     

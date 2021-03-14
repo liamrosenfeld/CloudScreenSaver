@@ -21,6 +21,7 @@ final class ContentPlayer: CALayer {
     private var imgDownSubscriber: AnyCancellable?
     
     private static let backgroundColor = CGColor(red: 0.00, green: 0.01, blue: 0.00, alpha: 1.0)
+    private var switchFrequency = Preferences.retrieveFromFile().switchFrequency
     
     // MARK: - Setup
     init(frame: NSRect) {
@@ -147,7 +148,7 @@ final class ContentPlayer: CALayer {
     
     // MARK: - Switching Players
     private func scheduleNextSwitch() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: prepareToSwitch)
+        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .seconds(switchFrequency)), execute: prepareToSwitch)
     }
     
     private func prepareToSwitch() {
