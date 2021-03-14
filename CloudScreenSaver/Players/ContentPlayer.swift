@@ -210,3 +210,7 @@ enum PlayerType {
     case image
     case none
 }
+
+extension Notification.Name {
+    static let ContentFinished = Notification.Name(rawValue: "ContentFinished")
+}

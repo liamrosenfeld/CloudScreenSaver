@@ -13,8 +13,6 @@
 		0C049B9425D35B96002FE3D8 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C049B8E25D35B61002FE3D8 /* PreferencesView.swift */; };
 		0C196EB925DDFFE200AA1327 /* ImagePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C196EB825DDFFE200AA1327 /* ImagePlayer.swift */; };
 		0C196EBA25DDFFE200AA1327 /* ImagePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C196EB825DDFFE200AA1327 /* ImagePlayer.swift */; };
-		0C196EBE25DE00B300AA1327 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C196EBD25DE00B300AA1327 /* Notifications.swift */; };
-		0C196EBF25DE00B300AA1327 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C196EBD25DE00B300AA1327 /* Notifications.swift */; };
 		0C2250B725DF20DA00BC9878 /* ContentPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2250B625DF20DA00BC9878 /* ContentPlayer.swift */; };
 		0C2250B825DF255E00BC9878 /* ContentPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2250B625DF20DA00BC9878 /* ContentPlayer.swift */; };
 		0C41C917257B59EE00106986 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7EE4AD257AFD8A00E639D0 /* Cache.swift */; };
@@ -55,7 +53,6 @@
 		0C049B8225D35519002FE3D8 /* Paths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paths.swift; sourceTree = "<group>"; };
 		0C049B8E25D35B61002FE3D8 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		0C196EB825DDFFE200AA1327 /* ImagePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePlayer.swift; sourceTree = "<group>"; };
-		0C196EBD25DE00B300AA1327 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		0C2250B625DF20DA00BC9878 /* ContentPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPlayer.swift; sourceTree = "<group>"; };
 		0C503EA625D2202C004C0715 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		0C658E4625F4475700ADFB24 /* FileListDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListDecoder.swift; sourceTree = "<group>"; };
@@ -117,15 +114,6 @@
 				0C196EB825DDFFE200AA1327 /* ImagePlayer.swift */,
 			);
 			path = Players;
-			sourceTree = "<group>";
-		};
-		0C196EBC25DE007300AA1327 /* Util */ = {
-			isa = PBXGroup;
-			children = (
-				0C049B8225D35519002FE3D8 /* Paths.swift */,
-				0C196EBD25DE00B300AA1327 /* Notifications.swift */,
-			);
-			path = Util;
 			sourceTree = "<group>";
 		};
 		0C78C490250F93A900C312EB /* TesterApp */ = {
@@ -193,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				0C7EE4AD257AFD8A00E639D0 /* Cache.swift */,
+				0C049B8225D35519002FE3D8 /* Paths.swift */,
 			);
 			path = Cache;
 			sourceTree = "<group>";
@@ -224,7 +213,6 @@
 				0CAF454C25F58A070067EFF5 /* Networking */,
 				0CC9286825D4C39E005E445D /* Cache */,
 				0C049B8D25D35B3A002FE3D8 /* Preferences */,
-				0C196EBC25DE007300AA1327 /* Util */,
 				0CEFBFFE250D524700776882 /* Info.plist */,
 			);
 			path = CloudScreenSaver;
@@ -346,7 +334,6 @@
 				0C7E3DB6257D66EC005F707A /* S3Client.swift in Sources */,
 				0C2250B825DF255E00BC9878 /* ContentPlayer.swift in Sources */,
 				0CAF454825F55A9C0067EFF5 /* URLSesson+Combine.swift in Sources */,
-				0C196EBF25DE00B300AA1327 /* Notifications.swift in Sources */,
 				0C891DB625FD7BDF004FA776 /* GreaterThanOne.swift in Sources */,
 				0C891DC425FDCF9A004FA776 /* ActionsView.swift in Sources */,
 				0C41C917257B59EE00106986 /* Cache.swift in Sources */,
@@ -375,7 +362,6 @@
 				0C658E4A25F4494E00ADFB24 /* Networking.swift in Sources */,
 				0C891DC325FDCF9A004FA776 /* ActionsView.swift in Sources */,
 				0C891DB825FD7BF3004FA776 /* NumberField.swift in Sources */,
-				0C196EBE25DE00B300AA1327 /* Notifications.swift in Sources */,
 				0C503EA725D2202C004C0715 /* Preferences.swift in Sources */,
 				0C049B8325D35519002FE3D8 /* Paths.swift in Sources */,
 				0C658E4725F4475700ADFB24 /* FileListDecoder.swift in Sources */,
