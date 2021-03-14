@@ -10,7 +10,7 @@ import SwiftUI
 struct ActionsView: View {
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Actions").font(.title2)
+            Text("Actions").font(.title)
             
             Button("Update Now", action: Networking.updateFromCloud)
             

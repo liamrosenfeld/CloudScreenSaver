@@ -12,10 +12,10 @@ struct PreferencesView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Preferences").font(.title2)
+            Text("Preferences").font(.title)
             
             Group {
-                Text("Content").font(.title3)
+                Text("Content").font(.headline)
                     .padding(.top, 3)
                 
                 NumberField(numberValue: $preferences.loopCount, title: "Video Loop Count")
@@ -24,7 +24,7 @@ struct PreferencesView: View {
             }
             
             Group {
-                Text("Cloud").font(.title3)
+                Text("Cloud").font(.headline)
                     .padding(.top, 3)
                 
                 HStack {
