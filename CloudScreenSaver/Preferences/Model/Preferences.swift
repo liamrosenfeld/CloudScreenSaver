@@ -12,7 +12,8 @@ struct Preferences {
     var updateFrequency: TimeInterval = 86400.0
     @GreaterThanOne var loopCount: Int = 1
     @GreaterThanOne var imageDuration: TimeInterval = 3
-    @GreaterThanOne var switchFrequency: Int = 6
+    @GreaterThanOne var imagePlayerDuration: Int = 6
+    @GreaterThanOne var videoPlayerDuration: Int = 6
     
     static func retrieveFromFile() -> Preferences {
         let existingFilesData = try! Data(contentsOf: Paths.preferencesFile)

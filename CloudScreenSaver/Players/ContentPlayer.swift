@@ -21,7 +21,9 @@ final class ContentPlayer: CALayer {
     private var imgDownSubscriber: AnyCancellable?
     
     private static let backgroundColor = CGColor(red: 0.00, green: 0.01, blue: 0.00, alpha: 1.0)
-    private var switchFrequency = Preferences.retrieveFromFile().switchFrequency
+    
+    private var videoPlayerDuration = Preferences.retrieveFromFile().videoPlayerDuration
+    private var imagePlayerDuration = Preferences.retrieveFromFile().imagePlayerDuration
     
     // MARK: - Setup
     init(frame: NSRect) {
@@ -160,7 +162,14 @@ final class ContentPlayer: CALayer {
     }
     
     private func scheduleNextSwitch() {
-        DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .seconds(switchFrequency)), execute: prepareToSwitch)
+        switch currentPlayer {
+        case .video:
+            DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .seconds(videoPlayerDuration)), execute: prepareToSwitch)
+        case .image:
+            DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .seconds(imagePlayerDuration)), execute: prepareToSwitch)
+        case .none:
+            print("no active player to play")
+        }
     }
     
     private func prepareToSwitch() {

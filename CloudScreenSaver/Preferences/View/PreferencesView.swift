@@ -18,9 +18,31 @@ struct PreferencesView: View {
                 Text("Content").font(.headline)
                     .padding(.top, 3)
                 
-                NumberField(numberValue: $preferences.loopCount, title: "Video Loop Count")
-                NumberField(numberValue: $preferences.imageDuration, title: "Image Duration (Sec)")
-                NumberField(numberValue: $preferences.switchFrequency, title: "Video/Image Switch Frequency (Sec)")
+                Group {
+                    NumberField(numberValue: $preferences.loopCount, title: "Video Loop Count")
+                    Text("The number of times the same video will play in a row.")
+                        .font(.footnote)
+                    Text("Note: Not guaranteed to be contiguous if Video Player Duration is less time.")
+                        .font(.footnote)
+                }
+                
+                Group {
+                    NumberField(numberValue: $preferences.imageDuration, title: "Image Duration")
+                    Text("The amount of time that each individual image will show on screen.")
+                        .font(.footnote)
+                }
+                
+                Group {
+                    NumberField(numberValue: $preferences.videoPlayerDuration, title: "Video Player Duration")
+                    NumberField(numberValue: $preferences.imagePlayerDuration, title: "Image Player Duration")
+                    Text("Player duration is the minimum contiguous time that a type of content will play.")
+                        .font(.footnote)
+                    Text("Note: When playing, it will never cut off content (will increase to fit).")
+                        .font(.footnote)
+                }
+               
+                Text("All durations are in seconds.")
+                    .font(.footnote)
             }
             
             Group {
@@ -39,6 +61,8 @@ struct PreferencesView: View {
                 }
             }
             
+            Text("Remember to click enter to finish editing text fields before applying")
+                .font(.footnote)
             Button("Apply", action: preferences.saveToFile)
         }
     }
