@@ -11,13 +11,16 @@ import Combine
 final class VideoPlayer {
     
     let layer: AVPlayerLayer
-    let queue: AVQueuePlayer
+    private let queue: AVQueuePlayer
     
-    var subscriptions = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
     
     var isEnabled: Bool {
         queue.items().count != 0
     }
+    
+    var readyToSwitch = PassthroughSubject<Void, Never>()
+    var willStop = false
     
     // MARK: Lifecycle
     init() {
@@ -43,6 +46,7 @@ final class VideoPlayer {
     
     func pause() {
         queue.pause()
+        willStop = false
     }
     
     // MARK: - Observers
@@ -51,11 +55,7 @@ final class VideoPlayer {
         // when a video finishes, move it to the end of the queue
         NotificationCenter.default
             .publisher(for: .AVPlayerItemDidPlayToEndTime)
-            .sink { _ in
-                NotificationCenter.default.post(Notification(name: .ContentFinished))
-                guard let currentItem = self.queue.currentItem?.copy() as? AVPlayerItem else { return }
-                self.queue.insert(currentItem, after: self.queue.items().last)
-            }
+            .sink(receiveValue: loopQueue)
             .store(in: &subscriptions)
         
         // add downloaded files to queue
@@ -65,6 +65,14 @@ final class VideoPlayer {
             .map { AVPlayerItem(asset: $0) }
             .sink { self.queue.append($0) }
             .store(in: &subscriptions)
+    }
+    
+    func loopQueue(_: Notification) {
+        if willStop {
+            readyToSwitch.send()
+        }
+        guard let currentItem = self.queue.currentItem?.copy() as? AVPlayerItem else { return }
+        self.queue.insert(currentItem, after: self.queue.items().last)
     }
 }
 

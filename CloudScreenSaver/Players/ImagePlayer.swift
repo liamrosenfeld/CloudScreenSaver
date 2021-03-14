@@ -10,16 +10,19 @@ import Combine
 
 final class ImagePlayer: CALayer {
     // MARK: - Properties
-    var timer: Timer?
-    var imgQueue: [NSImage]
-    var index: Int = 0
-    var imgDuration = Preferences.retrieveFromFile().imageDuration
+    private var timer: Timer?
+    private var imgQueue: [NSImage]
+    private var index: Int = 0
+    private var imgDuration = Preferences.retrieveFromFile().imageDuration
     
-    var subscriptions = Set<AnyCancellable>()
+    private var subscriptions = Set<AnyCancellable>()
     
     var isEnabled: Bool {
         imgQueue.count != 0
     }
+    
+    var readyToSwitch = PassthroughSubject<Void, Never>()
+    var willStop = false
     
     // MARK: - Init
     override init() {
@@ -32,7 +35,16 @@ final class ImagePlayer: CALayer {
         Cache
             .newImageDownloaded
             .compactMap { Cache.getImage($0) }
-            .sink { self.imgQueue.append($0) }
+            .sink { image in
+                self.imgQueue.append(image)
+                
+                // display immediately if first image
+                if self.imgQueue.count == 1 {
+                    DispatchQueue.main.async {
+                        self.contents = image
+                    }
+                }
+            }
             .store(in: &subscriptions)
     }
     
@@ -50,13 +62,14 @@ final class ImagePlayer: CALayer {
 
     func play() {
         timer = Timer.scheduledTimer(withTimeInterval: imgDuration, repeats: true, block: nextImage)
-        timer?.fire()
     }
     
     func pause() {
+        willStop = false
+        timer?.fire() // one last fire to get a new image next time it is shown
         timer?.invalidate()
     }
-    
+
     func nextImage(_: Timer) {
         // check that there are images
         guard !imgQueue.isEmpty else {
@@ -64,20 +77,20 @@ final class ImagePlayer: CALayer {
         }
         
         // notify content view of switch
-        NotificationCenter.default.post(Notification(name: .ContentFinished))
-        
-        // switch image
-        index += 1
-        if index == imgQueue.count {
-            index = 0
+        if willStop {
+            readyToSwitch.send()
+        } else {
+            // switch image
+            index += 1
+            if index == imgQueue.count {
+                index = 0
+            }
+            
+            DispatchQueue.main.async {
+                self.contents = self.imgQueue[self.index]
+            }
         }
-        
-        DispatchQueue.main.async {
-            self.contents = self.imgQueue[self.index]
-        }
-        
     }
-    
 }
 
 

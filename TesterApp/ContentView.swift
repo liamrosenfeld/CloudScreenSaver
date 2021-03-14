@@ -9,10 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        ZStack(alignment: .bottom) {
-            GeometryReader { reader in
-                ScreenSaver(frame: NSRect(origin: .zero, size: reader.size))
-            }
+        GeometryReader { reader in
+            ScreenSaver(frame: NSRect(origin: .zero, size: reader.size))
         }
     }
 }

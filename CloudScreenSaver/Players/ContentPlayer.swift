@@ -14,7 +14,7 @@ final class ContentPlayer: CALayer {
     private let imagePlayer: ImagePlayer
     
     private var currentPlayer: PlayerType
-    private var didFinishSubscriber: AnyCancellable?
+    private var readyToSwitchSubscribers = Set<AnyCancellable>()
     
     private let noPlayerLayer: CATextLayer
     private var vidDownSubscriber: AnyCancellable?
@@ -38,6 +38,7 @@ final class ContentPlayer: CALayer {
         super.init()
         self.frame = frame
         configureLayers()
+        observeReadyToSwitch()
         activatePlayers()
     }
     
@@ -147,37 +148,47 @@ final class ContentPlayer: CALayer {
     }
     
     // MARK: - Switching Players
+    private func observeReadyToSwitch() {
+        videoPlayer
+            .readyToSwitch
+            .sink(receiveValue: switchVideoToImage)
+            .store(in: &readyToSwitchSubscribers)
+        imagePlayer
+            .readyToSwitch
+            .sink(receiveValue: switchImageToVideo)
+            .store(in: &readyToSwitchSubscribers)
+    }
+    
     private func scheduleNextSwitch() {
         DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .seconds(switchFrequency)), execute: prepareToSwitch)
     }
     
     private func prepareToSwitch() {
-        didFinishSubscriber = NotificationCenter.default.publisher(for: .ContentFinished).sink(receiveValue: switchPlayer)
-    }
-    
-    private func switchPlayer(_: Notification) {
-        // remove observer because prepare has been handled
-        didFinishSubscriber?.cancel()
-        
-        // pause and switch sublayer
         switch currentPlayer {
         case .video:
-            imagePlayer.play()
-            self.replaceSublayer(videoPlayer.layer, with: imagePlayer)
-            videoPlayer.pause()
-            currentPlayer = .image
-            
+            videoPlayer.willStop = true
         case .image:
-            videoPlayer.play()
-            self.replaceSublayer(imagePlayer, with: videoPlayer.layer)
-            imagePlayer.pause()
-            currentPlayer = .video
-            
+            imagePlayer.willStop = true
         case .none:
             print("no active player to switch")
         }
+    }
+    
+    private func switchVideoToImage() {
+        imagePlayer.play()
+        self.replaceSublayer(videoPlayer.layer, with: imagePlayer)
+        videoPlayer.pause()
+        currentPlayer = .image
         
-        // set "timer" for next switch
+        scheduleNextSwitch()
+    }
+    
+    private func switchImageToVideo() {
+        videoPlayer.play()
+        self.replaceSublayer(imagePlayer, with: videoPlayer.layer)
+        imagePlayer.pause()
+        currentPlayer = .video
+        
         scheduleNextSwitch()
     }
     
@@ -209,8 +220,4 @@ enum PlayerType {
     case video
     case image
     case none
-}
-
-extension Notification.Name {
-    static let ContentFinished = Notification.Name(rawValue: "ContentFinished")
 }
