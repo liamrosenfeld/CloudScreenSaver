@@ -12,11 +12,12 @@ final class ContentPlayer: CALayer {
     // MARK: - Properties
     private let videoPlayer: VideoPlayer
     private let imagePlayer: ImagePlayer
+    private let noPlayer:    NoPlayer
     
     private var currentPlayer: PlayerType
     private var readyToSwitchSubscribers = Set<AnyCancellable>()
     
-    private let noPlayerLayer: CATextLayer
+    
     private var vidDownSubscriber: AnyCancellable?
     private var imgDownSubscriber: AnyCancellable?
     
@@ -30,11 +31,8 @@ final class ContentPlayer: CALayer {
         // init players
         self.videoPlayer = VideoPlayer()
         self.imagePlayer = ImagePlayer()
+        self.noPlayer = NoPlayer()
         self.currentPlayer = .none
-        
-        self.noPlayerLayer = CATextLayer()
-        noPlayerLayer.fontSize = 30
-        noPlayerLayer.string = "Downloading Screensavers. If this screen persists, check screen saver and network preferences."
         
         // setup layers
         super.init()
@@ -94,7 +92,7 @@ final class ContentPlayer: CALayer {
         } else {
             // neither are enabled
             // add temp no video layer
-            self.addSublayer(noPlayerLayer)
+            self.addSublayer(noPlayer)
             
             // add observers for both
             vidDownSubscriber = Cache
@@ -104,7 +102,7 @@ final class ContentPlayer: CALayer {
                     if imagePlayer.isEnabled {
                         scheduleNextSwitch()
                     } else {
-                        replaceSublayer(noPlayerLayer, with: videoPlayer.layer)
+                        replaceSublayer(noPlayer, with: videoPlayer.layer)
                         currentPlayer = .video
                         videoPlayer.play()
                     }
@@ -118,7 +116,7 @@ final class ContentPlayer: CALayer {
                     if videoPlayer.isEnabled {
                         scheduleNextSwitch()
                     } else {
-                        replaceSublayer(noPlayerLayer, with: imagePlayer)
+                        replaceSublayer(noPlayer, with: imagePlayer)
                         currentPlayer = .image
                         imagePlayer.play()
                     }
@@ -138,7 +136,7 @@ final class ContentPlayer: CALayer {
         // configure sub layers
         configureLayer(videoPlayer.layer)
         configureLayer(imagePlayer)
-        configureLayer(noPlayerLayer)
+        configureLayer(noPlayer)
     }
     
     private func configureLayer(_ layer: CALayer) {
