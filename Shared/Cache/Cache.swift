@@ -39,6 +39,12 @@ enum Cache {
         }
     }
     
+    static func updateLastUpdate() {
+        let interval = Date().timeIntervalSince1970
+        let data = String(interval).data(using: .utf8)
+        try? data?.write(to: Paths.lastUpdateFile)
+    }
+    
     // MARK: - Add + Remove
     static func saveFile(currentUrl: URL, file: S3File) {
         // sort
