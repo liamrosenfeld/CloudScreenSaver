@@ -30,7 +30,7 @@ class NoPlayer: CATextLayer {
         let yDiff = (height-fontSize)/2 - fontSize/10
         
         context.saveGState()
-        context.translateBy(x: 0, y: -yDiff) // -yDiff when in non-flipped coordinates (macOS's default)
+        context.translateBy(x: 0, y: -yDiff) // -yDiff bc non-flipped coordinates (macOS's default)
         super.draw(in: context)
         context.restoreGState()
     }

@@ -9,88 +9,70 @@ import AppKit
 import Combine
 
 final class ImagePlayer: CALayer {
-    // MARK: - Properties
-    private var timer: Timer?
-    private var imgQueue: [NSImage]
-    private var index: Int = 0
-    private var imgDuration = Preferences.retrieveFromFile().imageDuration
     
-    private var subscriptions = Set<AnyCancellable>()
-    
-    var isEnabled: Bool {
-        imgQueue.count != 0
-    }
-    
-    var readyToSwitch = PassthroughSubject<Void, Never>()
-    var willStop = false
-    
-    // MARK: - Init
-    override init() {
-        imgQueue = Cache.getImageIndex().compactMap { Cache.getImage($0) }
-        super.init()
-        
-        self.contents = imgQueue.first
-        
-        // add downloaded files to queue
-        Cache
-            .newImageDownloaded
-            .compactMap { Cache.getImage($0) }
-            .sink { image in
-                self.imgQueue.append(image)
-                
-                // display immediately if first image
-                if self.imgQueue.count == 1 {
-                    DispatchQueue.main.async {
-                        self.contents = image
-                    }
-                }
+    private var queue: [NSImage] = []
+    private var currentImg: NSImage? {
+        didSet {
+            // persist current image if set to nil
+            if let img = currentImg {
+                self.contents = img
             }
-            .store(in: &subscriptions)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Looping
-    override func display() {
-        guard !imgQueue.isEmpty else {
-            return
         }
-        self.contents = imgQueue[index]
+    }
+    private var paused = false
+    private let imgDuration = Preferences.retrieveFromFile().imageDuration
+    
+    var finishedImage = PassthroughSubject<Void, Never>()
+    
+    override func display() {
+        self.contents = currentImg
+    }
+    
+    func addImage(_ image: NSImage) {
+        if currentImg == nil {
+            // if no image is currently displayed, just display it immediately
+            currentImg = image
+        } else {
+            queue.append(image)
+        }
     }
 
     func play() {
-        timer = Timer.scheduledTimer(withTimeInterval: imgDuration, repeats: true, block: nextImage)
+        paused = false
+        DispatchQueue.main.asyncAfter(imgDuration, execute: nextImage)
     }
     
     func pause() {
-        willStop = false
-        timer?.fire() // one last fire to get a new image next time it is shown
-        timer?.invalidate()
+        paused = true
     }
-
-    func nextImage(_: Timer) {
-        // check that there are images
-        guard !imgQueue.isEmpty else {
+    
+    private func nextImage() {
+        // if there is nothing in the queue, set current image to nil
+        // allows the add image function to know when to set immediately
+        guard !queue.isEmpty else {
+            currentImg = nil
+            finishedImage.send()
             return
         }
         
-        // notify content view of switch
-        if willStop {
-            readyToSwitch.send()
-        } else {
-            // switch image
-            index += 1
-            if index == imgQueue.count {
-                index = 0
-            }
-            
-            DispatchQueue.main.async {
-                self.contents = self.imgQueue[self.index]
-            }
+        // notify of switch
+        finishedImage.send()
+        
+        // don't show next image if it is paused
+        guard !paused else {
+            return
         }
+        
+        // switch image
+        currentImg = queue.removeFirst()
+        
+        // set timer for next switch
+        DispatchQueue.main.asyncAfter(imgDuration, execute: nextImage)
     }
 }
 
-
+extension DispatchQueue {
+    func asyncAfter(_ timeInterval: Int, execute work: @escaping () -> Void) {
+        self.asyncAfter(deadline: .now().advanced(by: .seconds(timeInterval)), execute: work)
+    }
+}

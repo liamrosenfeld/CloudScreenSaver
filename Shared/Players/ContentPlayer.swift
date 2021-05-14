@@ -10,120 +10,120 @@ import Combine
 
 final class ContentPlayer: CALayer {
     // MARK: - Properties
+    let queueManager: QueueManager
+    var index: Int = -1
+    var lastContent: Content?
+    var nextIndex: Int {
+        (index + 1) % queueManager.queue.count
+    }
+    
     private let videoPlayer: VideoPlayer
     private let imagePlayer: ImagePlayer
     private let noPlayer:    NoPlayer
     
-    private var currentPlayer: PlayerType
-    private var readyToSwitchSubscribers = Set<AnyCancellable>()
-    
-    
-    private var vidDownSubscriber: AnyCancellable?
-    private var imgDownSubscriber: AnyCancellable?
-    
-    private static let backgroundColor = CGColor(red: 0.00, green: 0.01, blue: 0.00, alpha: 1.0)
-    
-    private var videoPlayerDuration = Preferences.retrieveFromFile().videoPlayerDuration
-    private var imagePlayerDuration = Preferences.retrieveFromFile().imagePlayerDuration
+    private var downloadSub: AnyCancellable?
+    private var subscribers = Set<AnyCancellable>()
     
     // MARK: - Setup
-    init(frame: NSRect) {
+    init(frame: NSRect, queueManager: QueueManager) {
         // init players
         self.videoPlayer = VideoPlayer()
         self.imagePlayer = ImagePlayer()
         self.noPlayer = NoPlayer()
-        self.currentPlayer = .none
+        
+        self.queueManager = queueManager
         
         // setup layers
         super.init()
         self.frame = frame
         configureLayers()
-        observeReadyToSwitch()
-        activatePlayers()
+        
+        showStart()
+        
+        videoPlayer.finishedVideo
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: showNextIndex)
+            .store(in: &subscribers)
+        imagePlayer.finishedImage
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: showNextIndex)
+            .store(in: &subscribers)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Activating Players
-    private func activatePlayers() {
-        let videoEnabled = videoPlayer.isEnabled
-        let imageEnabled = imagePlayer.isEnabled
-        
-        if videoEnabled && imageEnabled {
-            // if both players are enabled, enable switching immediately
-            // starting with videos
-            currentPlayer = .video
-            self.addSublayer(videoPlayer.layer)
-            scheduleNextSwitch()
-        } else if videoEnabled || imageEnabled {
-            // if only one is enabled, start that one
-            // then start switching if the other is added
-            if videoEnabled {
-                // video is immediately enabled
-                currentPlayer = .video
-                self.addSublayer(videoPlayer.layer)
-                videoPlayer.play()
-                
-                // observer set to enable image if downloaded
-                imgDownSubscriber = Cache
-                    .newImageDownloaded
-                    .receive(on: DispatchQueue.main)
-                    .sink { _ in
-                        self.scheduleNextSwitch()
-                        self.imgDownSubscriber?.cancel()
-                    }
-            } else {
-                // image is immediately enabled
-                currentPlayer = .image
-                self.addSublayer(imagePlayer)
-                imagePlayer.play()
-                
-                // observer set to enable video if downloaded
-                vidDownSubscriber = Cache
-                    .newVideoDownloaded
-                    .receive(on: DispatchQueue.main)
-                    .sink { _ in
-                        self.scheduleNextSwitch()
-                        self.vidDownSubscriber?.cancel()
-                    }
-            }
-        } else {
-            // neither are enabled
-            // add temp no video layer
+    // MARK: - Iterating
+    func showStart() {
+        if queueManager.queue.count == 0 {
             self.addSublayer(noPlayer)
-            
-            // add observers for both
-            vidDownSubscriber = Cache
-                .newVideoDownloaded
-                .receive(on: DispatchQueue.main)
-                .sink { [self] _ in
-                    if imagePlayer.isEnabled {
-                        scheduleNextSwitch()
-                    } else {
-                        replaceSublayer(noPlayer, with: videoPlayer.layer)
-                        currentPlayer = .video
-                        videoPlayer.play()
-                    }
-                    vidDownSubscriber?.cancel()
-                }
-            
-            imgDownSubscriber = Cache
-                .newImageDownloaded
-                .receive(on: DispatchQueue.main)
-                .sink { [self] _ in
-                    if videoPlayer.isEnabled {
-                        scheduleNextSwitch()
-                    } else {
-                        replaceSublayer(noPlayer, with: imagePlayer)
-                        currentPlayer = .image
-                        imagePlayer.play()
-                    }
-                    imgDownSubscriber?.cancel()
-                }
+        } else {
+            showNextIndex()
         }
     }
+    
+    func showNextIndex() {
+        index = nextIndex
+        let content = queueManager.queue[index]
+        let nextContent = queueManager.queue[nextIndex]
+        
+        switch content {
+        case .image(let image):
+            // show image
+            // depends on what was last
+            switch lastContent {
+            case .image(_):
+                break
+            case .video(_):
+                replaceSublayer(videoPlayer.layer, with: imagePlayer)
+                imagePlayer.play()
+            case .none:
+                imagePlayer.addImage(image)
+                self.addSublayer(imagePlayer)
+            }
+            
+            imagePlayer.frame = frame
+            
+            // prep next
+            // depends on what comes next
+            switch nextContent {
+            case .image(let nextImage):
+                imagePlayer.addImage(nextImage)
+            case .video(let nextVideo):
+                videoPlayer.pause()
+                videoPlayer.addVideo(nextVideo)
+            }
+        case .video(let video):
+            // show video
+            // depends on what was last
+            switch lastContent {
+            case .image(_):
+                videoPlayer.play()
+                replaceSublayer(imagePlayer, with: videoPlayer.layer)
+            case .video(_):
+                break
+            case .none:
+                videoPlayer.addVideo(video)
+                self.addSublayer(videoPlayer.layer)
+            }
+            
+            videoPlayer.layer.frame = frame
+            
+            // prep next
+            // depends on what comes next
+            switch nextContent {
+            case .image(let nextImage):
+                imagePlayer.pause()
+                imagePlayer.addImage(nextImage)
+            case .video(let nextVideo):
+                videoPlayer.addVideo(nextVideo)
+            }
+        }
+        
+        lastContent = content
+    }
+    
     
     // MARK: - Layers
     private func configureLayers() {
@@ -135,96 +135,51 @@ final class ContentPlayer: CALayer {
         
         // configure sub layers
         configureLayer(videoPlayer.layer)
+        videoPlayer.layer.videoGravity = .resizeAspect
         configureLayer(imagePlayer)
+        imagePlayer.contentsGravity = .resizeAspect
         configureLayer(noPlayer)
     }
     
     private func configureLayer(_ layer: CALayer) {
         layer.frame = frame
         layer.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
-        layer.contentsGravity = .resizeAspect
-        layer.backgroundColor = Self.backgroundColor
+        layer.backgroundColor = .black
         layer.needsDisplayOnBoundsChange = true
-    }
-    
-    // MARK: - Switching Players
-    private func observeReadyToSwitch() {
-        videoPlayer
-            .readyToSwitch
-            .sink(receiveValue: switchVideoToImage)
-            .store(in: &readyToSwitchSubscribers)
-        imagePlayer
-            .readyToSwitch
-            .sink(receiveValue: switchImageToVideo)
-            .store(in: &readyToSwitchSubscribers)
-    }
-    
-    private func scheduleNextSwitch() {
-        switch currentPlayer {
-        case .video:
-            DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .seconds(videoPlayerDuration)), execute: prepareToSwitch)
-        case .image:
-            DispatchQueue.main.asyncAfter(deadline: .now().advanced(by: .seconds(imagePlayerDuration)), execute: prepareToSwitch)
-        case .none:
-            print("no active player to play")
-        }
-    }
-    
-    private func prepareToSwitch() {
-        switch currentPlayer {
-        case .video:
-            videoPlayer.willStop = true
-        case .image:
-            imagePlayer.willStop = true
-        case .none:
-            print("no active player to switch")
-        }
-    }
-    
-    private func switchVideoToImage() {
-        imagePlayer.play()
-        self.replaceSublayer(videoPlayer.layer, with: imagePlayer)
-        videoPlayer.pause()
-        currentPlayer = .image
-        
-        scheduleNextSwitch()
-    }
-    
-    private func switchImageToVideo() {
-        videoPlayer.play()
-        self.replaceSublayer(imagePlayer, with: videoPlayer.layer)
-        imagePlayer.pause()
-        currentPlayer = .video
-        
-        scheduleNextSwitch()
     }
     
     // MARK: - Toggle Playback
     func play() {
-        switch currentPlayer {
-        case .video:
-            videoPlayer.play()
-        case .image:
-            imagePlayer.play()
-        case .none:
-            print("no active player to play")
+        if queueManager.queue.count == 0 {
+            downloadSub = queueManager
+                .newContentDownloaded
+                .receive(on: DispatchQueue.main)
+                .sink {
+                    self.downloadSub?.cancel()
+                    self.noPlayer.removeFromSuperlayer()
+                    self.showNextIndex()
+                    self.play()
+                }
+        } else {
+            switch queueManager.queue[index] {
+            case .image(_):
+                imagePlayer.play()
+            case .video(_):
+                videoPlayer.play()
+            }
         }
     }
     
     func pause() {
-        switch currentPlayer {
-        case .video:
-            videoPlayer.pause()
-        case .image:
-            imagePlayer.pause()
-        case .none:
-            print("no active player to pause")
+        if queueManager.queue.count == 0 {
+            downloadSub?.cancel()
+        } else {
+            switch queueManager.queue[index] {
+            case .image(_):
+                imagePlayer.pause()
+            case .video(_):
+                videoPlayer.pause()
+            }
         }
     }
-}
-
-enum PlayerType {
-    case video
-    case image
-    case none
 }

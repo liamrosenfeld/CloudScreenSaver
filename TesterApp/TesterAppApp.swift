@@ -15,7 +15,7 @@ struct TesterAppApp: App {
         }
         Settings {
             OptionsView(window: NSWindow())
-                .frame(width: 450, height: 600)
+                .frame(width: 450, height: 500)
         }
     }
 }

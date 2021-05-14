@@ -10,9 +10,14 @@ import SwiftUI
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
+    let queueManager = QueueManager()
+    
     // MARK: - Lifecycle
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         openWindow(self)
+        DispatchQueue.global(qos: .default).async {
+            Networking.updateIfTime()
+        }
     }
     
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
@@ -53,7 +58,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let frame = NSRect(x: 0, y: 0, width: 480, height: 300)
         
         // create view
-        let playerView = PlayerView(frame: frame)
+        let playerView = PlayerView(frame: frame, queueManager: queueManager)
         playerView.autoresizingMask = [.width, .height]
         
         // create window

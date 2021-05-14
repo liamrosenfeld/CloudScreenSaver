@@ -12,6 +12,7 @@ import SwiftUI
 class CloudScreenSaverView: ScreenSaverView {
     
     var contentPlayer: ContentPlayer
+    var queueManager = QueueManager()
     
     // MARK: Initialization
     static let secondPerFrame = 1.0 / 30.0
@@ -21,11 +22,14 @@ class CloudScreenSaverView: ScreenSaverView {
         // this undoes this because this frame is used independently on each monitor
         let adjustedFrame = NSRect(origin: .zero, size: frame.size)
         
-        contentPlayer = ContentPlayer(frame: adjustedFrame)
+        contentPlayer = ContentPlayer(frame: adjustedFrame, queueManager: queueManager)
         super.init(frame: frame, isPreview: isPreview)
         
         setupLayer()
-        Networking.updateIfTime()
+        
+        DispatchQueue.global(qos: .default).async {
+            Networking.updateIfTime()
+        }
     }
     
     required init?(coder decoder: NSCoder) {
@@ -52,7 +56,7 @@ class CloudScreenSaverView: ScreenSaverView {
     // MARK: Preferences
     lazy var preferencesWindow: NSWindow = {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 450, height: 600),
+            contentRect: NSRect(x: 0, y: 0, width: 450, height: 500),
             styleMask: [.titled, .fullSizeContentView, .utilityWindow],
             backing: .buffered, defer: false)
         window.center()

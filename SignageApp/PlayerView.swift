@@ -10,23 +10,17 @@ import AVFoundation
 
 class PlayerView: NSView {
     
-    var contentPlayer: ContentPlayer
-    
-    override init(frame: NSRect) {
-        contentPlayer = ContentPlayer(frame: frame)
+    init(frame: NSRect, queueManager: QueueManager) {
         super.init(frame: frame)
         
-        setupLayer()
-        Networking.updateIfTime()
+        let player = ContentPlayer(frame: frame, queueManager: queueManager)
+        self.wantsLayer = true
+        self.layer = player
+        
+        player.play()
     }
     
     required init?(coder decoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    func setupLayer() {
-        self.wantsLayer = true
-        self.layer = contentPlayer
-        contentPlayer.play()
     }
 }

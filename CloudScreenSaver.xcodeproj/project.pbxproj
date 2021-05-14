@@ -70,6 +70,12 @@
 		0CAF454A25F55AF00067EFF5 /* S3File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454925F55AF00067EFF5 /* S3File.swift */; };
 		0CAF454B25F55B060067EFF5 /* S3File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454925F55AF00067EFF5 /* S3File.swift */; };
 		0CEFBFFD250D524700776882 /* CloudScreenSaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEFBFFC250D524700776882 /* CloudScreenSaverView.swift */; };
+		0CF49DD6264758D2009820C9 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF49DD5264758D2009820C9 /* Content.swift */; };
+		0CF49DD8264758DA009820C9 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF49DD7264758DA009820C9 /* QueueManager.swift */; };
+		0CF49DD926475AB8009820C9 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF49DD5264758D2009820C9 /* Content.swift */; };
+		0CF49DDA26475AB8009820C9 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF49DD7264758DA009820C9 /* QueueManager.swift */; };
+		0CF49DDB26475AB8009820C9 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF49DD5264758D2009820C9 /* Content.swift */; };
+		0CF49DDC26475AB8009820C9 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF49DD7264758DA009820C9 /* QueueManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -109,6 +115,8 @@
 		0CEFBFF7250D524700776882 /* CloudScreenSaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CloudScreenSaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CEFBFFC250D524700776882 /* CloudScreenSaverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudScreenSaverView.swift; sourceTree = "<group>"; };
 		0CEFBFFE250D524700776882 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0CF49DD5264758D2009820C9 /* Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
+		0CF49DD7264758DA009820C9 /* QueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +167,7 @@
 		0C3F707826442B2B0041565C /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				0CF49DD4264758C5009820C9 /* Queue */,
 				0C196EBB25DE001C00AA1327 /* Players */,
 				0CAF454C25F58A070067EFF5 /* Networking */,
 				0CC9286825D4C39E005E445D /* Cache */,
@@ -296,6 +305,15 @@
 				0CEFBFFE250D524700776882 /* Info.plist */,
 			);
 			path = CloudScreenSaver;
+			sourceTree = "<group>";
+		};
+		0CF49DD4264758C5009820C9 /* Queue */ = {
+			isa = PBXGroup;
+			children = (
+				0CF49DD5264758D2009820C9 /* Content.swift */,
+				0CF49DD7264758DA009820C9 /* QueueManager.swift */,
+			);
+			path = Queue;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -451,6 +469,8 @@
 				0C3F709B26442DAE0041565C /* NumberField.swift in Sources */,
 				0C3F708026442CDC0041565C /* AppDelegate.swift in Sources */,
 				0C4687F726449FAD004D1ECE /* NoPlayer.swift in Sources */,
+				0CF49DDB26475AB8009820C9 /* Content.swift in Sources */,
+				0CF49DDC26475AB8009820C9 /* QueueManager.swift in Sources */,
 				0C3F709426442DAE0041565C /* ContentPlayer.swift in Sources */,
 				0C3F70A226442DAE0041565C /* S3File.swift in Sources */,
 				0C3F709E26442DAE0041565C /* S3Client.swift in Sources */,
@@ -465,6 +485,7 @@
 				0C78C4A8250F968000C312EB /* CloudScreenSaverView.swift in Sources */,
 				0C891DBE25FDCC86004FA776 /* TimeIntervalPicker.swift in Sources */,
 				0C503EAC25D220E1004C0715 /* Preferences.swift in Sources */,
+				0CF49DD926475AB8009820C9 /* Content.swift in Sources */,
 				0C891DC125FDCF79004FA776 /* OptionsView.swift in Sources */,
 				0C658E4825F4475700ADFB24 /* FileListDecoder.swift in Sources */,
 				0C7E3DB6257D66EC005F707A /* S3Client.swift in Sources */,
@@ -483,6 +504,7 @@
 				0C78C4A7250F968000C312EB /* VideoPlayer.swift in Sources */,
 				0C658E4B25F4494E00ADFB24 /* Networking.swift in Sources */,
 				0C891DB925FD7C03004FA776 /* NumberField.swift in Sources */,
+				0CF49DDA26475AB8009820C9 /* QueueManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -491,8 +513,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C891DBD25FDCC86004FA776 /* TimeIntervalPicker.swift in Sources */,
+				0CF49DD8264758DA009820C9 /* QueueManager.swift in Sources */,
 				0C2250B725DF20DA00BC9878 /* ContentPlayer.swift in Sources */,
 				0C4687F526449FAD004D1ECE /* NoPlayer.swift in Sources */,
+				0CF49DD6264758D2009820C9 /* Content.swift in Sources */,
 				0C78C48A250F90BE00C312EB /* VideoPlayer.swift in Sources */,
 				0C891DC025FDCF79004FA776 /* OptionsView.swift in Sources */,
 				0CAF454725F55A840067EFF5 /* URLSesson+Combine.swift in Sources */,
