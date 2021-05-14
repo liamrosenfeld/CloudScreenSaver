@@ -14,7 +14,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - Lifecycle
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        // open a main window
         openWindow(self)
+        
+        // open preferences if bucket is not set
+        if Preferences.retrieveFromFile().bucketName == "" {
+            preferences(self)
+        }
+        
+        // update cache
         DispatchQueue.global(qos: .default).async {
             Networking.updateIfTime()
         }
