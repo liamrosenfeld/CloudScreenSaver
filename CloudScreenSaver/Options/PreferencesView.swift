@@ -45,10 +45,11 @@ struct PreferencesView: View {
                     Text("Update Frequency")
                     TimeIntervalPicker(interval: $preferences.updateFrequency)
                 }
+                Text("The cache will update when the screen saver starts if it has been longer than this time interval.")
+                    .font(.footnote)
             }
             
             Text("Remember to click enter to finish editing text fields before applying")
-                .font(.footnote)
             Button("Apply", action: preferences.saveToFile)
         }
     }
