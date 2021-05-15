@@ -75,6 +75,8 @@
 		0CD3C803264F6619004008F3 /* DispatchQueue+After.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FB264F3D28004008F3 /* DispatchQueue+After.swift */; };
 		0CD3C804264F661B004008F3 /* Set+Diff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FD264F3D3F004008F3 /* Set+Diff.swift */; };
 		0CD3C805264F661C004008F3 /* Set+Diff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FD264F3D3F004008F3 /* Set+Diff.swift */; };
+		0CD3C807264F692A004008F3 /* ScreenOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C806264F692A004008F3 /* ScreenOption.swift */; };
+		0CD3C80A265042C6004008F3 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C809265042C6004008F3 /* WindowManager.swift */; };
 		0CEFBFFD250D524700776882 /* CloudScreenSaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEFBFFC250D524700776882 /* CloudScreenSaverView.swift */; };
 		0CF49DD6264758D2009820C9 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF49DD5264758D2009820C9 /* Content.swift */; };
 		0CF49DD8264758DA009820C9 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF49DD7264758DA009820C9 /* QueueManager.swift */; };
@@ -122,6 +124,8 @@
 		0CD3C7FB264F3D28004008F3 /* DispatchQueue+After.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+After.swift"; sourceTree = "<group>"; };
 		0CD3C7FD264F3D3F004008F3 /* Set+Diff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Set+Diff.swift"; sourceTree = "<group>"; };
 		0CD3C7FF264F3EA7004008F3 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		0CD3C806264F692A004008F3 /* ScreenOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenOption.swift; sourceTree = "<group>"; };
+		0CD3C809265042C6004008F3 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
 		0CEFBFF7250D524700776882 /* CloudScreenSaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CloudScreenSaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CEFBFFC250D524700776882 /* CloudScreenSaverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudScreenSaverView.swift; sourceTree = "<group>"; };
 		0CEFBFFE250D524700776882 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -191,13 +195,9 @@
 			isa = PBXGroup;
 			children = (
 				0C3F709026442D5E0041565C /* PlayerView.swift */,
+				0CD3C808265042B0004008F3 /* Lifecycle */,
 				0CD3C801264F3EBD004008F3 /* Preferences */,
-				0C3F707F26442CDC0041565C /* AppDelegate.swift */,
-				0C3F708326442CDD0041565C /* Assets.xcassets */,
-				0C3F708826442CDD0041565C /* Main.storyboard */,
-				0C3F708B26442CDD0041565C /* Info.plist */,
-				0C3F708C26442CDD0041565C /* SignageApp.entitlements */,
-				0C3F708526442CDD0041565C /* Preview Content */,
+				0CD3C80B265042F0004008F3 /* SupportFiles */,
 			);
 			path = SignageApp;
 			sourceTree = "<group>";
@@ -301,8 +301,30 @@
 			children = (
 				0CD3C7F8264E1994004008F3 /* PreferencesView.swift */,
 				0CD3C7FF264F3EA7004008F3 /* Preferences.swift */,
+				0CD3C806264F692A004008F3 /* ScreenOption.swift */,
 			);
 			path = Preferences;
+			sourceTree = "<group>";
+		};
+		0CD3C808265042B0004008F3 /* Lifecycle */ = {
+			isa = PBXGroup;
+			children = (
+				0C3F707F26442CDC0041565C /* AppDelegate.swift */,
+				0CD3C809265042C6004008F3 /* WindowManager.swift */,
+			);
+			path = Lifecycle;
+			sourceTree = "<group>";
+		};
+		0CD3C80B265042F0004008F3 /* SupportFiles */ = {
+			isa = PBXGroup;
+			children = (
+				0C3F708326442CDD0041565C /* Assets.xcassets */,
+				0C3F708826442CDD0041565C /* Main.storyboard */,
+				0C3F708B26442CDD0041565C /* Info.plist */,
+				0C3F708C26442CDD0041565C /* SignageApp.entitlements */,
+				0C3F708526442CDD0041565C /* Preview Content */,
+			);
+			path = SupportFiles;
 			sourceTree = "<group>";
 		};
 		0CEFBFED250D524700776882 = {
@@ -502,6 +524,8 @@
 				0C4687F726449FAD004D1ECE /* NoPlayer.swift in Sources */,
 				0CF49DDB26475AB8009820C9 /* Content.swift in Sources */,
 				0CF49DDC26475AB8009820C9 /* QueueManager.swift in Sources */,
+				0CD3C807264F692A004008F3 /* ScreenOption.swift in Sources */,
+				0CD3C80A265042C6004008F3 /* WindowManager.swift in Sources */,
 				0C3F709426442DAE0041565C /* ContentPlayer.swift in Sources */,
 				0C3F70A226442DAE0041565C /* S3File.swift in Sources */,
 				0C3F709E26442DAE0041565C /* S3Client.swift in Sources */,
@@ -591,14 +615,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SignageApp/SignageApp.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SignageApp/SupportFiles/SignageApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"SignageApp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SignageApp/SupportFiles/Preview Content\"";
 				DEVELOPMENT_TEAM = 28V7PPHDHC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = SignageApp/Info.plist;
+				INFOPLIST_FILE = SignageApp/SupportFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -617,14 +641,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SignageApp/SignageApp.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SignageApp/SupportFiles/SignageApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"SignageApp/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SignageApp/SupportFiles/Preview Content\"";
 				DEVELOPMENT_TEAM = 28V7PPHDHC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = SignageApp/Info.plist;
+				INFOPLIST_FILE = SignageApp/SupportFiles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

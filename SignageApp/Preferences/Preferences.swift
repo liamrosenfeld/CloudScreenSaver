@@ -10,6 +10,7 @@ import Foundation
 struct Preferences {
     var bucketName: String = ""
     var updateFrequency: TimeInterval = 86400.0
+    var startingScreen: ScreenOption = .main
     @GreaterThanOne var loopCount: Int = 1
     @GreaterThanOne var imageDuration: Int = 3
     

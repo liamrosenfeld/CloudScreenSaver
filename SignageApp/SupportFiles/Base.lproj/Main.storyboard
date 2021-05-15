@@ -37,7 +37,7 @@
                                         <menuItem isSeparatorItem="YES" id="XLy-aq-XIE"/>
                                         <menuItem title="Preferences…" keyEquivalent="," id="uJ0-il-fKi">
                                             <connections>
-                                                <action selector="preferences:" target="Voe-Tx-rLC" id="b6c-Yy-FVv"/>
+                                                <action selector="openPreferences:" target="Voe-Tx-rLC" id="b6c-Yy-FVv"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
@@ -78,7 +78,7 @@
                                     <items>
                                         <menuItem title="New Window" keyEquivalent="n" id="Was-JA-tGl">
                                             <connections>
-                                                <action selector="openWindow:" target="Voe-Tx-rLC" id="K9O-kB-iaH"/>
+                                                <action selector="newWindow:" target="Voe-Tx-rLC" id="K9O-kB-iaH"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
