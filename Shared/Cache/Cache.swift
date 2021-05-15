@@ -160,15 +160,6 @@ extension URL {
     }
 }
 
-extension Set where Element: Equatable {
-    func diff(old: Self) -> (added: Self, removed: Self) {
-        let difference = self.symmetricDifference(old)
-        let added = difference.intersection(self)
-        let removed = difference.intersection(old)
-        return (added, removed)
-    }
-}
-
 enum MediaType {
     case video
     case image

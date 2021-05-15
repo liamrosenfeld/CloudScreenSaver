@@ -70,9 +70,3 @@ final class ImagePlayer: CALayer {
         DispatchQueue.main.asyncAfter(imgDuration, execute: nextImage)
     }
 }
-
-extension DispatchQueue {
-    func asyncAfter(_ timeInterval: Int, execute work: @escaping () -> Void) {
-        self.asyncAfter(deadline: .now().advanced(by: .seconds(timeInterval)), execute: work)
-    }
-}
