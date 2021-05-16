@@ -18,39 +18,33 @@ class WindowManager {
     
     // MARK: - Main Window
     func initialOpen() {
-        let screenOption = Preferences.retrieveFromFile().startingScreen
+        // get prefs
+        let prefs = Preferences.retrieveFromFile()
+        let startingScreen = prefs.startingScreen
+        let startFullscreen = prefs.startFullscreen
         
-        // controllers are needed here to keep the app from crashing when a window is closed
-        // if they are not used the app delegate get deallocated
-        switch screenOption {
+        // open windows on screens set in preferences
+        switch startingScreen {
         case .main:
-            let win = newMainWindow(screen: nil)
-            let controller = NSWindowController(window: win)
-            controller.showWindow(self)
+            newMainWindow(screen: nil, fullscreen: startFullscreen)
         case .all:
             for screen in NSScreen.screens {
-                let win = newMainWindow(screen: screen)
-                let controller = NSWindowController(window: win)
-                controller.showWindow(self)
+                newMainWindow(screen: screen, fullscreen: startFullscreen)
             }
         case .custom(let selectedScreens):
             let screenIDs = selectedScreens.map(\.id)
             let screens = NSScreen.screens.filter { screenIDs.contains($0.id) }
             for screen in screens {
-                let win = newMainWindow(screen: screen)
-                let controller = NSWindowController(window: win)
-                controller.showWindow(self)
+                newMainWindow(screen: screen, fullscreen: startFullscreen)
             }
         }
     }
     
     func openNewMain() {
-        let win = newMainWindow(screen: nil)
-        let controller = NSWindowController(window: win)
-        controller.showWindow(self)
+        newMainWindow(screen: nil, fullscreen: false)
     }
     
-    private func newMainWindow(screen: NSScreen?) -> NSWindow {
+    private func newMainWindow(screen: NSScreen?, fullscreen: Bool) {
         let frame = NSRect(x: 0, y: 0, width: 480, height: 300)
         
         // create view
@@ -81,7 +75,16 @@ class WindowManager {
         // add view to window
         win.contentView = playerView
         
-        return win
+        // open window
+        // controllers are needed here to keep the app from crashing when a window is closed
+        // if they are not used the app delegate get deallocated
+        let controller = NSWindowController(window: win)
+        controller.showWindow(self)
+        
+        // make fullscreen if enabled
+        if fullscreen && win.styleMask != .fullScreen  {
+            win.toggleFullScreen(self)
+        }
     }
     
     // MARK: - Preferences

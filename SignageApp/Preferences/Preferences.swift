@@ -8,11 +8,17 @@
 import Foundation
 
 struct Preferences {
-    var bucketName: String = ""
-    var updateFrequency: TimeInterval = 86400.0
-    var startingScreen: ScreenOption = .main
+    // content
     @GreaterThanOne var loopCount: Int = 1
     @GreaterThanOne var imageDuration: Int = 3
+    
+    // cloud
+    var bucketName: String = ""
+    var updateFrequency: TimeInterval = 86400.0
+    
+    // launcing
+    var startingScreen: ScreenOption = .main
+    var startFullscreen: Bool = false
     
     static func retrieveFromFile() -> Preferences {
         let existingFilesData = try! Data(contentsOf: Paths.preferencesFile)

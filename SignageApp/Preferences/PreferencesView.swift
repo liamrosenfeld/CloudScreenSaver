@@ -65,8 +65,10 @@ struct PreferencesView: View {
             Spacer()
             
             Group {
-                Text("Screens").font(.system(size: 18))
+                Text("Launching").font(.system(size: 18))
                     .padding(.top, 3)
+                
+                Toggle("Start Fullscreen", isOn: $preferences.startFullscreen)
                 
                 Picker("Stating Screen(s)", selection: $preferences.startingScreen) {
                     Text("Main").tag(ScreenOption.main)
