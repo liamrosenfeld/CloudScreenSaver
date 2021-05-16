@@ -75,7 +75,7 @@ struct PreferencesView: View {
                 }
                 
                 if case .custom(_) = preferences.startingScreen {
-                    ScreenPicker($selectedScreens)
+                    ScreenPicker(selectedScreens: $selectedScreens)
                 }
             }
             

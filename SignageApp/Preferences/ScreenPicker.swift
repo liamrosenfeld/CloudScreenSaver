@@ -11,16 +11,19 @@ struct ScreenPicker: View {
     
     @Binding var selectedScreens: Set<Screen>
     
-    var allScreens: Set<Screen>
-    var disconnectedScreens: Set<Screen>
+    @State private var connectedScreens = Set<Screen>()
+    @State private var allScreens = Set<Screen>()
+    @State private var disconnectedScreens = Set<Screen>()
     
-    init(_ selectedScreens: Binding<Set<Screen>>) {
-        _selectedScreens = selectedScreens
-        
-        let connectedScreens = Set(NSScreen.screens.map { Screen(nsscreen: $0) })
-        
-        self.disconnectedScreens = selectedScreens.wrappedValue.subtracting(connectedScreens)
-        self.allScreens = selectedScreens.wrappedValue.union(connectedScreens)
+    let displaySettingChange = NotificationCenter.default.publisher(for: NSApplication.didChangeScreenParametersNotification)
+    
+    func getScreens() {
+        let retrievedScreens = Set(NSScreen.screens.map { Screen(nsscreen: $0) })
+        if retrievedScreens != connectedScreens {
+            connectedScreens = Set(NSScreen.screens.map { Screen(nsscreen: $0) })
+            disconnectedScreens = selectedScreens.subtracting(connectedScreens)
+            allScreens = selectedScreens.union(connectedScreens)
+        }
     }
     
     var body: some View {
@@ -54,6 +57,7 @@ struct ScreenPicker: View {
                 Text("No More Screens Available").padding(.top, 2)
             }
         }
-        
+        .onAppear(perform: getScreens)
+        .onReceive(displaySettingChange, perform: { _ in getScreens() })
     }
 }
