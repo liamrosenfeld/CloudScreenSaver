@@ -8,14 +8,25 @@
 import SwiftUI
 
 struct PreferencesView: View {
-    @State var preferences = Preferences.retrieveFromFile()
+    @State var preferences: Preferences
+    @State var selectedScreens: Set<Screen>
+    
+    init() {
+        let retrievedPrefs = Preferences.retrieveFromFile()
+        self._preferences = State(initialValue: retrievedPrefs)
+        switch retrievedPrefs.startingScreen {
+        case .custom(let screens):
+            self._selectedScreens = State(initialValue: screens)
+        default:
+            self._selectedScreens = State(initialValue: Set())
+        }
+        
+    }
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Preferences").font(.title)
-            
             Group {
-                Text("Content").font(.headline)
+                Text("Content").font(.system(size: 18))
                     .padding(.top, 3)
                 
                 Group {
@@ -31,8 +42,10 @@ struct PreferencesView: View {
                 }
             }
             
+            Spacer()
+            
             Group {
-                Text("Cloud").font(.headline)
+                Text("Cloud").font(.system(size: 18))
                     .padding(.top, 3)
                 
                 HStack {
@@ -49,12 +62,38 @@ struct PreferencesView: View {
                     .font(.footnote)
             }
             
-            Text("Remember to click enter to finish editing text fields before applying")
-            Button("Apply", action: applyPrefs)
+            Spacer()
+            
+            Group {
+                Text("Screens").font(.system(size: 18))
+                    .padding(.top, 3)
+                
+                Picker("Stating Screen(s)", selection: $preferences.startingScreen) {
+                    Text("Main").tag(ScreenOption.main)
+                    Text("All").tag(ScreenOption.all)
+                    Text("Custom").tag(ScreenOption.custom(screens: Set()))
+                }
+                
+                if case .custom(_) = preferences.startingScreen {
+                    ScreenPicker($selectedScreens)
+                }
+            }
+            
+            Spacer()
+            
+            Group {
+                Text("Remember to click enter to finish editing text fields before applying")
+                Button("Apply", action: applyPrefs)
+            }
         }
     }
     
     func applyPrefs() {
+        // apply selected screens
+        if case .custom(_) = preferences.startingScreen {
+            preferences.startingScreen = .custom(screens: selectedScreens)
+        }
+        
         // save new preferences to preferences file
         let origPrefs = Preferences.retrieveFromFile()
         preferences.saveToFile()

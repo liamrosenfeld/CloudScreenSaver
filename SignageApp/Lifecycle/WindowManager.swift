@@ -33,7 +33,8 @@ class WindowManager {
                 let controller = NSWindowController(window: win)
                 controller.showWindow(self)
             }
-        case .custom(let screenIDs):
+        case .custom(let selectedScreens):
+            let screenIDs = selectedScreens.map(\.id)
             let screens = NSScreen.screens.filter { screenIDs.contains($0.id) }
             for screen in screens {
                 let win = newMainWindow(screen: screen)
@@ -98,7 +99,8 @@ class WindowManager {
             preferencesWindow?.isReleasedWhenClosed = false
             preferencesWindow?.center()
             preferencesWindow?.setFrameAutosaveName("Preferences")
-            preferencesWindow?.contentView = NSHostingView(rootView: PreferencesView().padding())
+            preferencesWindow?.contentView = NSHostingView(rootView: PreferencesView().padding().frame(width: 500, height: 600))
+            preferencesWindow?.title = "Preferences"
         }
         preferencesWindow?.makeKeyAndOrderFront(self)
     }

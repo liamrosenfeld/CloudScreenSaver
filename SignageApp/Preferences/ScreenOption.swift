@@ -10,7 +10,24 @@ import Foundation
 enum ScreenOption {
     case main
     case all
-    case custom(screens: Set<CGDirectDisplayID>)
+    case custom(screens: Set<Screen>)
+}
+
+extension ScreenOption: Hashable {
+    // ignore associated value when comparing
+    // allows swiftui picker to work
+    static func ==(lhs: Self, rhs: Self) -> Bool {
+        switch (lhs, rhs) {
+        case (.main, .main):
+            return true
+        case (.all, .all):
+            return true
+        case (.custom(_), .custom(_)):
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 extension ScreenOption: Codable {
@@ -32,7 +49,7 @@ extension ScreenOption: Codable {
             self = .all
         case "custom":
             let subContainer = try container.nestedContainer(keyedBy: CodingKeys.CustomKeys.self, forKey: .associatedValues)
-            let associatedValues0 = try subContainer.decode(Set<CGDirectDisplayID>.self, forKey: .screens)
+            let associatedValues0 = try subContainer.decode(Set<Screen>.self, forKey: .screens)
             self = .custom(screens: associatedValues0)
         default:
             throw DecodingError.keyNotFound(CodingKeys.type, .init(codingPath: container.codingPath, debugDescription: "Unknown key"))

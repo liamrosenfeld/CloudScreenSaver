@@ -77,6 +77,8 @@
 		0CD3C805264F661C004008F3 /* Set+Diff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FD264F3D3F004008F3 /* Set+Diff.swift */; };
 		0CD3C807264F692A004008F3 /* ScreenOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C806264F692A004008F3 /* ScreenOption.swift */; };
 		0CD3C80A265042C6004008F3 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C809265042C6004008F3 /* WindowManager.swift */; };
+		0CD3C80D2650DF25004008F3 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C80C2650DF25004008F3 /* Screen.swift */; };
+		0CD3C80F2650DF4F004008F3 /* ScreenPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C80E2650DF4F004008F3 /* ScreenPicker.swift */; };
 		0CEFBFFD250D524700776882 /* CloudScreenSaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEFBFFC250D524700776882 /* CloudScreenSaverView.swift */; };
 		0CF49DD6264758D2009820C9 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF49DD5264758D2009820C9 /* Content.swift */; };
 		0CF49DD8264758DA009820C9 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF49DD7264758DA009820C9 /* QueueManager.swift */; };
@@ -126,6 +128,8 @@
 		0CD3C7FF264F3EA7004008F3 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		0CD3C806264F692A004008F3 /* ScreenOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenOption.swift; sourceTree = "<group>"; };
 		0CD3C809265042C6004008F3 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
+		0CD3C80C2650DF25004008F3 /* Screen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screen.swift; sourceTree = "<group>"; };
+		0CD3C80E2650DF4F004008F3 /* ScreenPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenPicker.swift; sourceTree = "<group>"; };
 		0CEFBFF7250D524700776882 /* CloudScreenSaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CloudScreenSaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 		0CEFBFFC250D524700776882 /* CloudScreenSaverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudScreenSaverView.swift; sourceTree = "<group>"; };
 		0CEFBFFE250D524700776882 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -300,8 +304,10 @@
 			isa = PBXGroup;
 			children = (
 				0CD3C7F8264E1994004008F3 /* PreferencesView.swift */,
+				0CD3C80E2650DF4F004008F3 /* ScreenPicker.swift */,
 				0CD3C7FF264F3EA7004008F3 /* Preferences.swift */,
 				0CD3C806264F692A004008F3 /* ScreenOption.swift */,
+				0CD3C80C2650DF25004008F3 /* Screen.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -514,6 +520,7 @@
 				0C3F709F26442DAE0041565C /* Paths.swift in Sources */,
 				0CD3C7F9264E1994004008F3 /* PreferencesView.swift in Sources */,
 				0C3F709526442DAE0041565C /* VideoPlayer.swift in Sources */,
+				0CD3C80F2650DF4F004008F3 /* ScreenPicker.swift in Sources */,
 				0C3F709126442D5E0041565C /* PlayerView.swift in Sources */,
 				0CD3C7FE264F3D3F004008F3 /* Set+Diff.swift in Sources */,
 				0CD3C800264F3EA7004008F3 /* Preferences.swift in Sources */,
@@ -527,6 +534,7 @@
 				0CD3C807264F692A004008F3 /* ScreenOption.swift in Sources */,
 				0CD3C80A265042C6004008F3 /* WindowManager.swift in Sources */,
 				0C3F709426442DAE0041565C /* ContentPlayer.swift in Sources */,
+				0CD3C80D2650DF25004008F3 /* Screen.swift in Sources */,
 				0C3F70A226442DAE0041565C /* S3File.swift in Sources */,
 				0C3F709E26442DAE0041565C /* S3Client.swift in Sources */,
 				0CD3C7FC264F3D28004008F3 /* DispatchQueue+After.swift in Sources */,
