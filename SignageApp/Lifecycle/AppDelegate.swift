@@ -9,14 +9,8 @@ import Cocoa
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
-    let windowManager: WindowManager
-    let queueManager: QueueManager
-    
-    override init() {
-        queueManager = QueueManager()
-        windowManager = WindowManager(queueManager: queueManager)
-    }
-    
+    let windowManager = WindowManager()
+
     // MARK: - Lifecycle
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // open the main window(s)

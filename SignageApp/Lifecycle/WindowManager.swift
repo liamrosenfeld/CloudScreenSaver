@@ -9,12 +9,9 @@ import AppKit
 import SwiftUI
 
 class WindowManager {
-    
-    var queueManager: QueueManager
-    
-    init(queueManager: QueueManager) {
-        self.queueManager = queueManager
-    }
+    // things shared between windows
+    var queueManager = QueueManager()
+    var mouseDeledate = MouseDelegate()
     
     // MARK: - Main Window
     func initialOpen() {
@@ -45,11 +42,7 @@ class WindowManager {
     }
     
     private func newMainWindow(screen: NSScreen?, fullscreen: Bool) {
-        let frame = NSRect(x: 0, y: 0, width: 480, height: 300)
-        
-        // create view
-        let playerView = PlayerView(frame: frame, queueManager: queueManager)
-        playerView.autoresizingMask = [.width, .height]
+        let frame = NSRect(x: 0, y: 0, width: 800, height: 500)
         
         // create window
         let win = NSWindow(
@@ -72,8 +65,9 @@ class WindowManager {
             win.center()
         }
         
-        // add view to window
-        win.contentView = playerView
+        // add view controller to window
+        let playerVC = PlayerViewController(frame: frame, queueManager: queueManager, mouseDelegate: mouseDeledate)
+        win.contentViewController = playerVC
         
         // open window
         // controllers are needed here to keep the app from crashing when a window is closed
@@ -84,6 +78,7 @@ class WindowManager {
         // make fullscreen if enabled
         if fullscreen && win.styleMask != .fullScreen  {
             win.toggleFullScreen(self)
+            playerVC.startedFullscreen()
         }
     }
     
