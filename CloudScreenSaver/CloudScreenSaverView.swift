@@ -27,9 +27,7 @@ class CloudScreenSaverView: ScreenSaverView {
         
         setupLayer()
         
-        DispatchQueue.global(qos: .default).async {
-            Networking.updateIfTime()
-        }
+        Networking.updateIfTime()
     }
     
     required init?(coder decoder: NSCoder) {

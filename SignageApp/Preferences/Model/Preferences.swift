@@ -14,7 +14,7 @@ struct Preferences {
     
     // cloud
     var bucketName: String = ""
-    var updateFrequency: TimeInterval = 86400.0
+    var updateFrequency: TimeInterval = 43200.0
     
     // launcing
     var startingScreen: ScreenOption = .main

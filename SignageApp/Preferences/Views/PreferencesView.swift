@@ -58,8 +58,6 @@ struct PreferencesView: View {
                     Text("Update Frequency")
                     TimeIntervalPicker(interval: $preferences.updateFrequency)
                 }
-                Text("The cache will update on start after this time period has passed since last update.")
-                    .font(.footnote)
             }
             
             Spacer()

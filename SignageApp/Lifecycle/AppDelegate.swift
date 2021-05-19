@@ -9,7 +9,9 @@ import Cocoa
 
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
+    
     let windowManager = WindowManager()
+    var updateTimer: Timer?
 
     // MARK: - Lifecycle
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -22,8 +24,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         // update cache
-        DispatchQueue.global(qos: .default).async {
-            Networking.updateIfTime()
+        Networking.updateIfTime()
+        
+        // update during app run
+        let timeBetween = Preferences.retrieveFromFile().updateFrequency
+        if timeBetween != 0 {
+            updateTimer = Timer.scheduledTimer(withTimeInterval: timeBetween, repeats: true) { _ in
+                print("updating...")
+                DispatchQueue.global(qos: .default).async {
+                    Networking.updateFromCloud()
+                }
+            }
         }
     }
     

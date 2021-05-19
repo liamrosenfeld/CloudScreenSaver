@@ -12,19 +12,18 @@ enum Networking {
     static var cancellables = Set<AnyCancellable>()
     
     static func updateIfTime() {
-        // always update if nothing is downloaded
-        if Cache.getCombinedIndex().count == 0 {
-            updateFromCloud()
-            return
-        }
-        
-        // update if update frequency preference has passed
+        // get time of the next fetch
         let lastFetch   = Cache.getLastUpdate()
         let timeBetween = Preferences.retrieveFromFile().updateFrequency
         let nextFetch   = lastFetch.addingTimeInterval(timeBetween)
-        if  nextFetch <= Date() {
+        
+        // update if update frequency preference has passed
+        // always update if nothing is downloaded
+        if  nextFetch <= Date() || Cache.getCombinedIndex().count == 0 {
             print("updating...")
-            updateFromCloud()
+            DispatchQueue.global(qos: .default).async {
+                Networking.updateFromCloud()
+            }
         }
     }
     
