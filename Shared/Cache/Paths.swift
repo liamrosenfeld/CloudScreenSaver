@@ -9,22 +9,11 @@ import Foundation
 
 enum Paths {
     static var cacheFolder: URL = {
-        let cache = supportPath.appendingPathComponent("Cache")
-        
-        if !FileManager.default.fileExists(atPath: cache.path) {
-            print("Creating cache directory...")
-            do {
-                try FileManager.default.createDirectory(
-                    at: cache,
-                    withIntermediateDirectories: false,
-                    attributes: nil
-                )
-            } catch let error {
-                fatalError("FATAL : Couldn't create Cache directory in CloudScreenSaver's AppSupport directory: \(error)")
-            }
-        }
-        
-        return cache
+        getOrMakeFolder(named: "Cache")
+    }()
+    
+    static var tempFolder: URL = {
+        getOrMakeFolder(named: "Temp")
     }()
     
     static var preferencesFile: URL = {
@@ -32,6 +21,7 @@ enum Paths {
     }()
     
     static var cacheVideoIndexFile: URL = {
+        print(rootFile(named: "cache-video-index.json"))
         return rootFile(named: "cache-video-index.json")
     }()
     
@@ -42,6 +32,26 @@ enum Paths {
     static var lastUpdateFile: URL = {
         return rootFile(named: "last-update.txt")
     }()
+    
+    // MARK: - Helpers
+    static private func getOrMakeFolder(named name: String) -> URL {
+        let dir = supportPath.appendingPathComponent(name)
+        
+        if !FileManager.default.fileExists(atPath: dir.path) {
+            print("Creating \(name) directory...")
+            do {
+                try FileManager.default.createDirectory(
+                    at: dir,
+                    withIntermediateDirectories: false,
+                    attributes: nil
+                )
+            } catch let error {
+                fatalError("FATAL : Couldn't create \(name) directory in CloudScreenSaver's AppSupport directory: \(error)")
+            }
+        }
+        
+        return dir
+    }
     
     static private func rootFile(named name: String) -> URL {
         let url = supportPath.appendingPathComponent(name)

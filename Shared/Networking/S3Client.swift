@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
 
 struct S3Client {
     let bucketUrl: URL
@@ -18,22 +17,38 @@ struct S3Client {
         bucketUrl = url
     }
     
-    func downloadFile(_ file: S3File) -> Future<URL, Error> {
+    func downloadFile(_ file: S3File) async throws -> URL {
+        // download file from server
         let url = bucketUrl.appendingPathComponent(file.cloudName)
-        return URLSession.shared.downloadFile(url: url)
+        let (downloadLocation, response) = try await URLSession.shared.download(from: url)
+        
+        // handle errors
+        guard let status = (response as? HTTPURLResponse)?.statusCode else {
+            throw URLError(.badServerResponse)
+        }
+        guard 200 <= status && status < 299 else {
+            throw URLError(.badServerResponse)
+        }
+        
+        return downloadLocation
     }
     
-    func listFiles() -> AnyPublisher<Set<S3File>, Error> {
-        // create the request
+    func listFiles() async throws -> Set<S3File> {
+        // list from server
         let url = bucketUrl.appendingQueryItems([URLQueryItem(name: "list-type", value: "2")])!
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        let decoder = FileListDecoder()
+        let (data, response) = try await URLSession.shared.data(from: url)
         
-        // Start a new Task
-        return URLSession.shared
-            .makeRequest(request: request)
-            .decode(type: Set<S3File>.self, decoder: FileListDecoder())
-            .eraseToAnyPublisher()
+        // handle errors
+        guard let status = (response as? HTTPURLResponse)?.statusCode else {
+            throw URLError(.badServerResponse)
+        }
+        guard 200 <= status && status < 299 else {
+            throw URLError(.badServerResponse)
+        }
+        
+        // return decoded text
+        return try decoder.decode(Set<S3File>.self, from: data)
     }
 }
 

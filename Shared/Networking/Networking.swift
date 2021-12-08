@@ -6,12 +6,9 @@
 //
 
 import Foundation
-import Combine
 
 enum Networking {
-    static var cancellables = Set<AnyCancellable>()
-    
-    static func updateIfTime() {
+    static func updateIfTime() async {
         // get time of the next fetch
         let lastFetch   = Cache.getLastUpdate()
         let timeBetween = Preferences.retrieveFromFile().updateFrequency
@@ -19,76 +16,40 @@ enum Networking {
         
         // update if update frequency preference has passed
         // always update if nothing is downloaded
-        if  nextFetch <= Date() || Cache.getCombinedIndex().count == 0 {
+        if nextFetch <= Date() || Cache.getCombinedIndex().count == 0 {
             print("updating...")
-            DispatchQueue.global(qos: .default).async {
-                Networking.updateFromCloud()
+            Task(priority: .medium) {
+                await Networking.updateFromCloud()
             }
         }
     }
     
-    static func updateFromCloud() {
+    static func updateFromCloud() async {
         guard let bucket = S3Client(bucketName: Preferences.retrieveFromFile().bucketName) else {
-            fatalError("invalid bucket")
+            print("invalid bucket")
+            return
         }
-        bucket
-            .listFiles()
-            .map(\.diffFromIndex)
-            .sink(receiveCompletion: { completion in
-                print("listFiles completed: \(completion)")
-            }, receiveValue: { (added, removed) in
-                downloadFiles(added, bucket: bucket)
-                removeFiles(removed)
-                Cache.updateLastUpdate()
-            }).store(in: &cancellables)
-    }
-    
-    static private func downloadFiles(_ files: Set<S3File>, bucket: S3Client) {
-        if #available(macOS 11.0, *) {
-            files
-                .publisher
-                .flatMap { file in
-                    bucket.downloadFile(file).map { fileURL -> (file: S3File, fileURL: URL) in
-                        (file, fileURL)
-                    }
-                }
-                .sink(
-                    receiveCompletion: { completion in
-                        print("download finished: \(completion)")
-                    },
-                    receiveValue: { fileInfo in
-                        Cache.saveFile(currentUrl: fileInfo.fileURL, file: fileInfo.file)
-                    }
-                )
-                .store(in: &cancellables)
-        } else {
-            files.forEach { file in
-                bucket
-                    .downloadFile(file)
-                    .sink(
-                        receiveCompletion: { completion in
-                            print("download finished: \(completion)")
-                        },
-                        receiveValue: { fileURL in
-                            Cache.saveFile(currentUrl: fileURL, file: file)
-                        }
-                    ).store(in: &cancellables)
+        let fileDiff = try! await bucket.listFiles().diffFromIndex
+        
+        for file in fileDiff.added {
+            do {
+                let url = try await bucket.downloadFile(file)
+                Cache.saveFile(currentUrl: url, file: file)
+            } catch let error {
+                print("downloading files failed: \(error.localizedDescription)")
             }
         }
-    }
-    
-    static private func removeFiles(_ files: Set<S3File>) {
-        files
-            .publisher
-            .sink { file in
-                Cache.removeFile(file: file)
-            }
-            .store(in: &cancellables)
+        
+        for file in fileDiff.removed {
+            Cache.removeFile(file: file)
+        }
+        
+        Cache.updateLastUpdate()
     }
 }
 
 fileprivate extension Set where Element == S3File {
-    var diffFromIndex: (Self, Self) {
+    var diffFromIndex: (added: Self, removed: Self) {
         return self.diff(old: Cache.getCombinedIndex())
     }
 }

@@ -15,6 +15,9 @@
 		0C196EBA25DDFFE200AA1327 /* ImagePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C196EB825DDFFE200AA1327 /* ImagePlayer.swift */; };
 		0C2250B725DF20DA00BC9878 /* ContentPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2250B625DF20DA00BC9878 /* ContentPlayer.swift */; };
 		0C2250B825DF255E00BC9878 /* ContentPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2250B625DF20DA00BC9878 /* ContentPlayer.swift */; };
+		0C3BE67A27601AC300D21175 /* URLSession+AsyncBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3BE67927601AC300D21175 /* URLSession+AsyncBack.swift */; };
+		0C3BE67B27601AC300D21175 /* URLSession+AsyncBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3BE67927601AC300D21175 /* URLSession+AsyncBack.swift */; };
+		0C3BE67C27601AC300D21175 /* URLSession+AsyncBack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3BE67927601AC300D21175 /* URLSession+AsyncBack.swift */; };
 		0C3F708026442CDC0041565C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C3F707F26442CDC0041565C /* AppDelegate.swift */; };
 		0C3F708426442CDD0041565C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C3F708326442CDD0041565C /* Assets.xcassets */; };
 		0C3F708726442CDD0041565C /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C3F708626442CDD0041565C /* Preview Assets.xcassets */; };
@@ -23,7 +26,6 @@
 		0C3F709326442DAE0041565C /* ImagePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C196EB825DDFFE200AA1327 /* ImagePlayer.swift */; };
 		0C3F709426442DAE0041565C /* ContentPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C2250B625DF20DA00BC9878 /* ContentPlayer.swift */; };
 		0C3F709526442DAE0041565C /* VideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C78C489250F90BE00C312EB /* VideoPlayer.swift */; };
-		0C3F709626442DAE0041565C /* URLSesson+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454625F55A840067EFF5 /* URLSesson+Combine.swift */; };
 		0C3F709726442DAE0041565C /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C7EE4AD257AFD8A00E639D0 /* Cache.swift */; };
 		0C3F709926442DAE0041565C /* GreaterThanOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C891DB425FD7BD1004FA776 /* GreaterThanOne.swift */; };
 		0C3F709B26442DAE0041565C /* NumberField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C891DB725FD7BF3004FA776 /* NumberField.swift */; };
@@ -62,8 +64,6 @@
 		0C891DC125FDCF79004FA776 /* OptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C891DBF25FDCF79004FA776 /* OptionsView.swift */; };
 		0C891DC325FDCF9A004FA776 /* ActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C891DC225FDCF9A004FA776 /* ActionsView.swift */; };
 		0C891DC425FDCF9A004FA776 /* ActionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C891DC225FDCF9A004FA776 /* ActionsView.swift */; };
-		0CAF454725F55A840067EFF5 /* URLSesson+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454625F55A840067EFF5 /* URLSesson+Combine.swift */; };
-		0CAF454825F55A9C0067EFF5 /* URLSesson+Combine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454625F55A840067EFF5 /* URLSesson+Combine.swift */; };
 		0CAF454A25F55AF00067EFF5 /* S3File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454925F55AF00067EFF5 /* S3File.swift */; };
 		0CAF454B25F55B060067EFF5 /* S3File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454925F55AF00067EFF5 /* S3File.swift */; };
 		0CD3C7F9264E1994004008F3 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7F8264E1994004008F3 /* PreferencesView.swift */; };
@@ -95,6 +95,7 @@
 		0C049B8E25D35B61002FE3D8 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		0C196EB825DDFFE200AA1327 /* ImagePlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePlayer.swift; sourceTree = "<group>"; };
 		0C2250B625DF20DA00BC9878 /* ContentPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPlayer.swift; sourceTree = "<group>"; };
+		0C3BE67927601AC300D21175 /* URLSession+AsyncBack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+AsyncBack.swift"; sourceTree = "<group>"; };
 		0C3F707D26442CDC0041565C /* SignageApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SignageApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C3F707F26442CDC0041565C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0C3F708326442CDD0041565C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -122,7 +123,6 @@
 		0C891DBC25FDCC86004FA776 /* TimeIntervalPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeIntervalPicker.swift; sourceTree = "<group>"; };
 		0C891DBF25FDCF79004FA776 /* OptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsView.swift; sourceTree = "<group>"; };
 		0C891DC225FDCF9A004FA776 /* ActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsView.swift; sourceTree = "<group>"; };
-		0CAF454625F55A840067EFF5 /* URLSesson+Combine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSesson+Combine.swift"; sourceTree = "<group>"; };
 		0CAF454925F55AF00067EFF5 /* S3File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3File.swift; sourceTree = "<group>"; };
 		0CD3C7F8264E1994004008F3 /* PreferencesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		0CD3C7FB264F3D28004008F3 /* DispatchQueue+After.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+After.swift"; sourceTree = "<group>"; };
@@ -282,7 +282,7 @@
 				0C7E3DB4257D66EC005F707A /* S3Client.swift */,
 				0CAF454925F55AF00067EFF5 /* S3File.swift */,
 				0C658E4625F4475700ADFB24 /* FileListDecoder.swift */,
-				0CAF454625F55A840067EFF5 /* URLSesson+Combine.swift */,
+				0C3BE67927601AC300D21175 /* URLSession+AsyncBack.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -478,7 +478,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1220;
+				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					0C3F707C26442CDC0041565C = {
 						CreatedOnToolsVersion = 12.5;
@@ -545,7 +545,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C3F709626442DAE0041565C /* URLSesson+Combine.swift in Sources */,
 				0C3F709926442DAE0041565C /* GreaterThanOne.swift in Sources */,
 				0CD3C8142651D3C1004008F3 /* MouseDelegate.swift in Sources */,
 				0C3F709726442DAE0041565C /* Cache.swift in Sources */,
@@ -564,6 +563,7 @@
 				0C3F708026442CDC0041565C /* AppDelegate.swift in Sources */,
 				0C4687F726449FAD004D1ECE /* NoPlayer.swift in Sources */,
 				0CF49DDB26475AB8009820C9 /* Content.swift in Sources */,
+				0C3BE67C27601AC300D21175 /* URLSession+AsyncBack.swift in Sources */,
 				0CF49DDC26475AB8009820C9 /* QueueManager.swift in Sources */,
 				0CD3C807264F692A004008F3 /* ScreenOption.swift in Sources */,
 				0CD3C80A265042C6004008F3 /* WindowManager.swift in Sources */,
@@ -588,9 +588,9 @@
 				0C658E4825F4475700ADFB24 /* FileListDecoder.swift in Sources */,
 				0C7E3DB6257D66EC005F707A /* S3Client.swift in Sources */,
 				0C2250B825DF255E00BC9878 /* ContentPlayer.swift in Sources */,
+				0C3BE67B27601AC300D21175 /* URLSession+AsyncBack.swift in Sources */,
 				0CD3C805264F661C004008F3 /* Set+Diff.swift in Sources */,
 				0C4687F626449FAD004D1ECE /* NoPlayer.swift in Sources */,
-				0CAF454825F55A9C0067EFF5 /* URLSesson+Combine.swift in Sources */,
 				0C891DB625FD7BDF004FA776 /* GreaterThanOne.swift in Sources */,
 				0C891DC425FDCF9A004FA776 /* ActionsView.swift in Sources */,
 				0C41C917257B59EE00106986 /* Cache.swift in Sources */,
@@ -620,7 +620,6 @@
 				0CF49DD6264758D2009820C9 /* Content.swift in Sources */,
 				0C78C48A250F90BE00C312EB /* VideoPlayer.swift in Sources */,
 				0C891DC025FDCF79004FA776 /* OptionsView.swift in Sources */,
-				0CAF454725F55A840067EFF5 /* URLSesson+Combine.swift in Sources */,
 				0C7EE4AE257AFD8A00E639D0 /* Cache.swift in Sources */,
 				0C658E4A25F4494E00ADFB24 /* Networking.swift in Sources */,
 				0C891DC325FDCF9A004FA776 /* ActionsView.swift in Sources */,
@@ -632,6 +631,7 @@
 				0C891DB525FD7BD1004FA776 /* GreaterThanOne.swift in Sources */,
 				0CEFBFFD250D524700776882 /* CloudScreenSaverView.swift in Sources */,
 				0CD3C802264F6619004008F3 /* DispatchQueue+After.swift in Sources */,
+				0C3BE67A27601AC300D21175 /* URLSession+AsyncBack.swift in Sources */,
 				0C7E3DB5257D66EC005F707A /* S3Client.swift in Sources */,
 				0C049B8F25D35B61002FE3D8 /* PreferencesView.swift in Sources */,
 				0CAF454A25F55AF00067EFF5 /* S3File.swift in Sources */,
@@ -658,6 +658,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SignageApp/SupportFiles/SignageApp.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"SignageApp/SupportFiles/Preview Content\"";
@@ -684,6 +685,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = SignageApp/SupportFiles/SignageApp.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"SignageApp/SupportFiles/Preview Content\"";
