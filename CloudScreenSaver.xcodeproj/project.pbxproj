@@ -67,11 +67,8 @@
 		0CAF454A25F55AF00067EFF5 /* S3File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454925F55AF00067EFF5 /* S3File.swift */; };
 		0CAF454B25F55B060067EFF5 /* S3File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CAF454925F55AF00067EFF5 /* S3File.swift */; };
 		0CD3C7F9264E1994004008F3 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7F8264E1994004008F3 /* PreferencesView.swift */; };
-		0CD3C7FC264F3D28004008F3 /* DispatchQueue+After.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FB264F3D28004008F3 /* DispatchQueue+After.swift */; };
 		0CD3C7FE264F3D3F004008F3 /* Set+Diff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FD264F3D3F004008F3 /* Set+Diff.swift */; };
 		0CD3C800264F3EA7004008F3 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FF264F3EA7004008F3 /* Preferences.swift */; };
-		0CD3C802264F6619004008F3 /* DispatchQueue+After.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FB264F3D28004008F3 /* DispatchQueue+After.swift */; };
-		0CD3C803264F6619004008F3 /* DispatchQueue+After.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FB264F3D28004008F3 /* DispatchQueue+After.swift */; };
 		0CD3C804264F661B004008F3 /* Set+Diff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FD264F3D3F004008F3 /* Set+Diff.swift */; };
 		0CD3C805264F661C004008F3 /* Set+Diff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C7FD264F3D3F004008F3 /* Set+Diff.swift */; };
 		0CD3C807264F692A004008F3 /* ScreenOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C806264F692A004008F3 /* ScreenOption.swift */; };
@@ -125,7 +122,6 @@
 		0C891DC225FDCF9A004FA776 /* ActionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionsView.swift; sourceTree = "<group>"; };
 		0CAF454925F55AF00067EFF5 /* S3File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S3File.swift; sourceTree = "<group>"; };
 		0CD3C7F8264E1994004008F3 /* PreferencesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
-		0CD3C7FB264F3D28004008F3 /* DispatchQueue+After.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+After.swift"; sourceTree = "<group>"; };
 		0CD3C7FD264F3D3F004008F3 /* Set+Diff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Set+Diff.swift"; sourceTree = "<group>"; };
 		0CD3C7FF264F3EA7004008F3 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		0CD3C806264F692A004008F3 /* ScreenOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenOption.swift; sourceTree = "<group>"; };
@@ -299,7 +295,6 @@
 		0CD3C7FA264F3CD8004008F3 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				0CD3C7FB264F3D28004008F3 /* DispatchQueue+After.swift */,
 				0CD3C7FD264F3D3F004008F3 /* Set+Diff.swift */,
 			);
 			path = Extensions;
@@ -571,7 +566,6 @@
 				0CD3C80D2650DF25004008F3 /* Screen.swift in Sources */,
 				0C3F70A226442DAE0041565C /* S3File.swift in Sources */,
 				0C3F709E26442DAE0041565C /* S3Client.swift in Sources */,
-				0CD3C7FC264F3D28004008F3 /* DispatchQueue+After.swift in Sources */,
 				0C3F709326442DAE0041565C /* ImagePlayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -603,7 +597,6 @@
 				0C78C4A7250F968000C312EB /* VideoPlayer.swift in Sources */,
 				0C658E4B25F4494E00ADFB24 /* Networking.swift in Sources */,
 				0C891DB925FD7C03004FA776 /* NumberField.swift in Sources */,
-				0CD3C803264F6619004008F3 /* DispatchQueue+After.swift in Sources */,
 				0CF49DDA26475AB8009820C9 /* QueueManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -630,7 +623,6 @@
 				0C196EB925DDFFE200AA1327 /* ImagePlayer.swift in Sources */,
 				0C891DB525FD7BD1004FA776 /* GreaterThanOne.swift in Sources */,
 				0CEFBFFD250D524700776882 /* CloudScreenSaverView.swift in Sources */,
-				0CD3C802264F6619004008F3 /* DispatchQueue+After.swift in Sources */,
 				0C3BE67A27601AC300D21175 /* URLSession+AsyncBack.swift in Sources */,
 				0C7E3DB5257D66EC005F707A /* S3Client.swift in Sources */,
 				0C049B8F25D35B61002FE3D8 /* PreferencesView.swift in Sources */,

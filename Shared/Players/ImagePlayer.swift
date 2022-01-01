@@ -31,15 +31,22 @@ final class ImagePlayer: CALayer {
     func addImage(_ image: NSImage) {
         if currentImg == nil {
             // if no image is currently displayed, just display it immediately
+            // keeps it from flashing in when switching to the image view
             currentImg = image
         } else {
             queue.append(image)
         }
     }
-
+    
     func play() {
         paused = false
-        DispatchQueue.main.asyncAfter(imgDuration, execute: nextImage)
+        
+        Task {
+            while !paused {
+                try? await Task<Never, Never>.sleep(nanoseconds: UInt64(imgDuration * 1_000_000_000))
+                nextImage()
+            }
+        }
     }
     
     func pause() {
@@ -52,21 +59,14 @@ final class ImagePlayer: CALayer {
         guard !queue.isEmpty else {
             currentImg = nil
             finishedImage.send()
+            pause()
             return
         }
         
         // notify of switch
         finishedImage.send()
         
-        // don't show next image if it is paused
-        guard !paused else {
-            return
-        }
-        
         // switch image
         currentImg = queue.removeFirst()
-        
-        // set timer for next switch
-        DispatchQueue.main.asyncAfter(imgDuration, execute: nextImage)
     }
 }
