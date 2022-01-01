@@ -101,7 +101,9 @@ struct PreferencesView: View {
         // if this is adding a bucket for the first time,
         // pull new files immediately
         if origPrefs.bucketName.isEmpty && !preferences.bucketName.isEmpty {
-            Networking.updateFromCloud()
+            Task(priority: .medium) {
+                await Networking.updateFromCloud()
+            }
         }
     }
 }

@@ -29,7 +29,10 @@ enum Networking {
             print("invalid bucket")
             return
         }
-        let fileDiff = try! await bucket.listFiles().diffFromIndex
+        guard let fileDiff = try? await bucket.listFiles().diffFromIndex else {
+            print("could not connect to bucket")
+            return
+        }
         
         for file in fileDiff.added {
             do {

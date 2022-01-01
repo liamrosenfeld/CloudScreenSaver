@@ -24,15 +24,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         // update cache
-        Networking.updateIfTime()
+        Task(priority: .medium) {
+            await Networking.updateIfTime()
+        }
         
         // update during app run
         let timeBetween = Preferences.retrieveFromFile().updateFrequency
         if timeBetween != 0 {
             updateTimer = Timer.scheduledTimer(withTimeInterval: timeBetween, repeats: true) { _ in
                 print("updating...")
-                DispatchQueue.global(qos: .default).async {
-                    Networking.updateFromCloud()
+                Task(priority: .medium) {
+                    await Networking.updateFromCloud()
                 }
             }
         }
@@ -65,6 +67,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction func updateNow(_ sender: Any) {
-        Networking.updateFromCloud()
+        Task(priority: .medium) {
+            await Networking.updateFromCloud()
+        }
     }
 }

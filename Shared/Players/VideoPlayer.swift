@@ -46,9 +46,10 @@ final class VideoPlayer {
         didPlayToEndSub = NotificationCenter.default
             .publisher(for: .AVPlayerItemDidPlayToEndTime, object: finalLoopItem)
             .sink { [weak self] _ in
-                self?.queue.remove(self!.queue.items().first!)
+                guard let self = self else { return }
+                self.queue.remove(self.queue.items().first!)
                 didPlayToEndSub?.cancel()
-                self?.finishedVideo.send()
+                self.finishedVideo.send()
             }
     }
 }
