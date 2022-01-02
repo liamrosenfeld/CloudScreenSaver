@@ -34,7 +34,7 @@ struct ScreenPicker: View {
                     Button("-") {
                         selectedScreens.remove(screen)
                     }
-                    Text("\(screen.name) - \(screen.id)")
+                    Text(verbatim: "\(screen.name) (ID: \(screen.id))")
                     if disconnectedScreens.contains(screen) {
                         Text("(Disconnected)")
                     }
@@ -50,7 +50,7 @@ struct ScreenPicker: View {
                     Button("+") {
                         selectedScreens.insert(screen)
                     }
-                    Text("\(screen.name) - \(screen.id)")
+                    Text(verbatim: "\(screen.name) (ID: \(screen.id))")
                 }
             }
             if allScreens.subtracting(selectedScreens).isEmpty {

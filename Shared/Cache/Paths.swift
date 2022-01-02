@@ -21,7 +21,6 @@ enum Paths {
     }()
     
     static var cacheVideoIndexFile: URL = {
-        print(rootFile(named: "cache-video-index.json"))
         return rootFile(named: "cache-video-index.json")
     }()
     

@@ -97,7 +97,7 @@ class WindowManager {
             preferencesWindow?.isReleasedWhenClosed = false
             preferencesWindow?.center()
             preferencesWindow?.setFrameAutosaveName("Preferences")
-            preferencesWindow?.contentView = NSHostingView(rootView: PreferencesView().padding().frame(width: 500, height: 600))
+            preferencesWindow?.contentView = NSHostingView(rootView: PreferencesView().padding().frame(width: 500, height: 700))
             preferencesWindow?.title = "Preferences"
         }
         preferencesWindow?.makeKeyAndOrderFront(self)

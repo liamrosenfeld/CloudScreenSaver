@@ -57,7 +57,7 @@ class CloudScreenSaverView: ScreenSaverView {
     // MARK: Preferences
     lazy var preferencesWindow: NSWindow = {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 450, height: 500),
+            contentRect: NSRect(x: 0, y: 0, width: 450, height: 575),
             styleMask: [.titled, .fullSizeContentView, .utilityWindow],
             backing: .buffered, defer: false)
         window.center()

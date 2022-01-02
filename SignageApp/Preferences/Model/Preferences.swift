@@ -16,7 +16,7 @@ struct Preferences {
     var bucketName: String = ""
     var updateFrequency: TimeInterval = 43200.0
     
-    // launcing
+    // launching
     var startingScreen: ScreenOption = .main
     var startFullscreen: Bool = false
     

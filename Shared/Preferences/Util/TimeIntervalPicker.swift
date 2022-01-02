@@ -12,7 +12,7 @@ struct TimeIntervalPicker: View {
     
     var body: some View {
         Picker("Update Frequency", selection: $interval) {
-            Text("Launch Only")
+            Text("Every Launch")
                 .tag(0.0)
             Text("Hourly")
                 .tag(3600.0)
